@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" rotate="45.0" snapToPixel="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <Label alignment="CENTER_LEFT" layoutX="74.0" layoutY="134.0" rotate="315.0" text="Autor: Fabrizio Niedda">
+      <font>
+        <Font size="14.0" fx:id="x1" />
+      </font>
+    </Label>
+    <Button layoutX="13.0" layoutY="17.0" mnemonicParsing="false" rotate="315.0" style="-fx-background-insets: 0 0 -1 0, 0, 0, 1;&#10; -fx-background: #F4F4F4;&#10;    -fx-base: #FF0000;&#10;-fx-inner-border: linear-gradient(to bottom, derive(-fx-color,100.0%) 0%, derive(-fx-color,100.0%) 100%);&#10;    -fx-body-color: linear-gradient( to bottom, derive(-fx-color, 100.0%) 0%, derive(-fx-color, 100.0%) 100%);&#10;" text="X" />
+    <Label alignment="CENTER_LEFT" layoutX="28.0" layoutY="81.0" rotate="315.0" text="Biding TicTacToe">
+      <font>
+        <Font name="System Bold" size="16.0" />
+      </font>
+    </Label>
+    <Label alignment="CENTER_LEFT" font="$x1" layoutX="111.0" layoutY="154.0" rotate="315.0" text="Kalaidos FH 2013" />
+  </children>
+</AnchorPane>
