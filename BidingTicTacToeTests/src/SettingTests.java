@@ -1,5 +1,7 @@
 import junit.framework.TestCase;
 
+import nif.tictactoe.SettingHelper;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

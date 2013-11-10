@@ -1,5 +1,7 @@
 import static org.junit.Assert.*;
 
+import nif.tictactoe.MongoDatabase;
+
 import org.junit.Test;
 
 
