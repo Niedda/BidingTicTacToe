@@ -1,0 +1,46 @@
+/**
+ * @author: Fabrizio Niedda
+ * @version: 1.0
+ * @description: Represents a game-field and offers some basic methods to deal with them. 
+ */
+public class GameField {
+	
+	//Privates
+	private String _value;
+	
+	private int _xPosition;
+
+	private int _yPosition;
+	
+	public GameField(int xPosition, int yPosition) {
+		_xPosition = xPosition;
+		_yPosition = yPosition;		
+	}
+	
+	public GameField(int xPosition, int yPosition, String value ) {
+		_value = value;
+		_xPosition = xPosition;
+		_yPosition = yPosition;		
+	}
+		
+	public int getYPosition() {
+		return _yPosition;
+	}
+	
+	public int getXPosition() {
+		return _xPosition;
+	}
+	
+	public String getValue() {
+		return _value;
+	}	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj.getClass().equals(GameField.class)) {
+			GameField comp = (GameField) obj;
+			return (comp.getValue().equals(getValue()) && comp.getXPosition() == getXPosition() && comp.getYPosition() == getYPosition());				
+		}
+		return false;		
+	}
+}

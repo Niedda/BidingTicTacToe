@@ -1,0 +1,47 @@
+import com.mongodb.*;
+
+public class MongoDatabase {
+
+	private static MongoDatabase _instance;
+
+	private Mongo _mongo;
+	
+	private DB _mongoDb;
+
+	private final String _hardTable = "hardTable";
+	
+	private final String _easyTable = "easyTable";
+	
+	private final String _hardTag = "hrd";
+	
+	public static MongoDatabase getDb() {
+		try {
+			if (_instance == null) {
+				_instance = new MongoDatabase();
+				_instance._mongo = new Mongo("localhost", 22225);
+			}
+			
+			if(!_instance._mongoDb.getName().equals(SettingHelper.getInstance().loadPlayerName())) {
+				//User has changed - reload the correct database.
+				_instance._mongoDb = _instance._mongo.getDB(SettingHelper.getInstance().loadPlayerName());				
+			} 
+			return _instance;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+	}	
+	
+	public long getHardGamesWin() {
+		DBCollection col = _mongoDb.getCollection(_hardTable);
+		return col.count();
+	}
+	
+	public long getEasyGamesWin() {
+		DBCollection col = _mongoDb.getCollection(_easyTable);
+		col.distinct(_hardTag);
+		return col.count();
+	}
+	
+	
+}

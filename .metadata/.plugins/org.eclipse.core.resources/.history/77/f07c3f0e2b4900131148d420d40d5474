@@ -1,0 +1,53 @@
+import javafx.application.Platform;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+
+public class SettingsController {
+	
+	public SettingsController() {
+		init();
+		//Initialize the GUI with the values.
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				init();				
+			}
+		});
+	}
+	
+	//UI-Fields
+	public TextField PlayerName;
+	public Label ErrorField;
+	
+	//Event Handlers
+	public void onSaveClick() {
+		if(PlayerName.getText().equals("")) {
+			//Invalid Name set to the default
+			ErrorField.setText("Bite einen gültigen Name eingeben.");
+			return;
+		}
+		SettingHelper.getInstance().savePlayerName(PlayerName.getText());
+		MainEntryPoint.closeDialog();
+	}	
+	
+	public void onTextChanged() {
+		if(PlayerName.getText().equals("")) {
+			//Invalid Name set to the default
+			ErrorField.setText("Bite einen gültigen Name eingeben.");
+		} else {
+			ErrorField.setText("");
+		}
+	}
+
+	//Publics	
+	public void init() {
+		PlayerName.setText(SettingHelper.getInstance().loadPlayerName());
+	}
+}

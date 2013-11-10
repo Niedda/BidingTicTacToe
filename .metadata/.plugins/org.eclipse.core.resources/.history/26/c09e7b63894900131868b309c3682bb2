@@ -1,0 +1,22 @@
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+
+public class MongoDatabaseTests {
+
+	@Test
+	public void testLoading() {
+		MongoDatabase.getDb();		
+	}
+	
+	@Test
+	public void testInserting() {
+		long counter = MongoDatabase.getDb().getEasyGamesLose();
+		MongoDatabase.getDb().addLoseEasy();
+		MongoDatabase.getDb().addLoseEasy();
+		long afterInsert = MongoDatabase.getDb().getEasyGamesLose();
+		assertEquals(counter + 2, afterInsert);
+	}
+
+}

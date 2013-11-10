@@ -1,0 +1,17 @@
+1382733138350	Move file
+1382775613098	Delete element
+1382776529309	Move file
+1382777076536	Delete element
+1382785488453	Encapsulate field '_ticTacToeGrid'
+1382790874414	Rename method 'getXPostition'
+1382815553301	Rename method 'isPlWinner'
+1382815868224	Rename method 'isAiWinner'
+1382816193491	Rename method 'getPlCredits'
+1382816203257	Rename method 'setPlCredits'
+1382816217695	Rename method 'setPlBid'
+1382816233790	Rename method 'getPlBid'
+1382817936933	Rename method 'getPlFields'
+1382901741787	Rename method 'resetPlayground'
+1382901860653	Rename method 'getCreditLabelPl'
+1382902092781	Rename method 'clearPlayground'
+1382903497884	Rename field '_fieldsToWinPl'

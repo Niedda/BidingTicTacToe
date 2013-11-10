@@ -1,0 +1,107 @@
+import java.net.URL;
+
+import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
+
+/**
+ * @author: Fabrizio Niedda
+ * @version: 1.0
+ * @description: Main startup class of the application.
+ */
+public class MainEntryPoint extends Application {
+
+	public static void main(String[] args) {
+		Application.launch(args);
+	}
+
+	/**
+	 * Main start method for the JavaFx-application. *
+	 */
+	@Override
+	public void start(Stage mainStage) throws Exception {
+		Parent root = FXMLLoader.load(getClass().getResource("MainView.fxml"));
+		mainStage.setTitle("Biding Tic Tac Toe");
+		mainStage.getIcons().add(new Image("file:images/tictactoeIcon.png"));
+		mainStage.setScene(new Scene(root));
+		mainStage.show();
+		_mainStage = mainStage;
+	}
+
+	/**
+	 * Helper method for displaying a modal dialog.
+	 * 
+	 * @param fxmlFile
+	 *            the URL path to the fxml File to load.
+	 */
+	public static void showModalDialog(URL fxmlFile) {
+		try {
+			Stage dialog = new Stage();
+			dialog.initModality(Modality.WINDOW_MODAL);
+			dialog.initStyle(StageStyle.UTILITY);
+			dialog.initOwner(_mainStage);
+			FXMLLoader loader = new FXMLLoader(fxmlFile);
+			Parent parent = (Parent) loader.load();
+			// final SettingsController controller =
+			// (SettingsController)loader.getController();
+			// dialog.addEventHandler(WindowEvent.WINDOW_SHOWN, onLoadDelegate);
+			dialog.setScene(new Scene(parent));
+			dialog.show();
+		} catch (Exception e) {
+			// TODO: handle
+		}
+	}
+
+	/**
+	 * Helper method for displaying a non modal dialog.
+	 * 
+	 * @param fxmlFile
+	 *            the URL path to the fxml File to load.
+	 */
+	public static void showSimpleDialog(URL fxmlFile) {
+		try {
+			Stage dialog = new Stage();
+			setDialogStage(dialog);
+			dialog.initStyle(StageStyle.UTILITY);
+			dialog.initOwner(_mainStage);
+			Parent loader = FXMLLoader.load(fxmlFile);
+			dialog.setScene(new Scene(loader));
+			dialog.show();
+		} catch (Exception e) {
+			// TODO: handle
+		}
+	}
+
+	public static void closeDialog() {
+		if (_dialogStage != null) {
+			_dialogStage.close();
+		}
+	}
+
+	private static Stage getDialogStage() {
+		if (_dialogStage != null) {
+			return _dialogStage;		
+		} else {
+			_dialogStage = new Stage();
+			return _dialogStage;
+		}
+	}
+
+	private static void setDialogStage(Stage stage) {
+		if (_dialogStage != null) {
+			_dialogStage.close();	
+		}
+		_dialogStage = stage;	
+	}
+
+	private static Stage _dialogStage;
+
+	private static Stage _mainStage;
+}
