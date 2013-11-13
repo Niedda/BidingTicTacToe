@@ -11,6 +11,7 @@ import nif.tictactoe.model.*;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -106,7 +107,7 @@ public class MainController {
 			btn.setDisable(true);
 		}
 		getBetButton().setDisable(true);
-		getBetSlider().setDisable(true);
+		getBetSlider().setDisable(true);		
 	}
 
 	/**
@@ -159,8 +160,7 @@ public class MainController {
 			getBetSlider().setDisable(false);
 			getBetSlider().setMin(1);
 		}
-		getBetSlider().setMax(
-				Double.parseDouble(getCreditLabelPlayer().getText()));
+		getBetSlider().setMax(Double.parseDouble(getCreditLabelPlayer().getText()));
 	}
 
 	/**
@@ -193,20 +193,20 @@ public class MainController {
 	public void showInfoMsg(String message) {
 		_infoLabel.setText(message);
 		_infoLabel.setVisible(true);
-		fadeIn.playFromStart();
-
-		getTimer().schedule(new TimerTask() {
+		
+		fadeIn.onFinishedProperty().set(new EventHandler<ActionEvent>() {
 			@Override
-			public void run() {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						_infoLabel.setText("");
-						_infoLabel.setVisible(false);
-					}
-				});
-			}
-		}, 1500);
+			public void handle(ActionEvent arg) {				
+				_infoLabel.setText("");
+				_infoLabel.setVisible(false);
+				if(Context.getContext().isAiWinner()) {
+					showWinMsg();				
+				} else if(Context.getContext().isPlayerWinner()) {
+					switchToMoveMode();
+				}
+			}			
+		});		
+		fadeIn.playFromStart();
 	}
 
 	/**
@@ -214,70 +214,64 @@ public class MainController {
 	 */
 	public void showWinMsg() {
 		updatePlayground();
-
-		getTimer().schedule(new TimerTask() {
+		Thread t = new Thread(){
 			@Override
 			public void run() {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						updatePlayground();
-						if (Context.getContext().isAiGameWinner()) {
-							_infoLabel
-									.setText("Der Computer hat das Spiel gewonnen!");
-							_infoLabel.setVisible(true);
-							fadeIn.playFromStart();
-							switchToGameEndMode();
-							if (Context.getContext().getBrain().getClass() == EasyBrain.class) {
-								MongoDatabase.getDb().addLoseEasy();
-							} else {
-								MongoDatabase.getDb().addLoseHard();
-							}
-						} else if (Context.getContext().isPlayerGameWinner()) {
-							_infoLabel.setText("Du hast das Spiel gewonnen!");
-							_infoLabel.setVisible(true);
-							fadeIn.playFromStart();
-							switchToGameEndMode();
-							if (Context.getContext().getBrain().getClass() == EasyBrain.class) {
-								MongoDatabase.getDb().addWinEasy();
-							} else {
-								MongoDatabase.getDb().addWinHard();
-							}
-						} else if (Context.getContext().isDrawGame()) {
-							_infoLabel
-									.setText("Das Spiel endete Unentschieden!");
-							_infoLabel.setVisible(true);
-							fadeIn.playFromStart();
-							switchToGameEndMode();
-						}
+				updatePlayground();
+				if (Context.getContext().isAiGameWinner()) {
+					_infoLabel.setText("Der Computer hat das Spiel gewonnen!");
+					_infoLabel.setVisible(true);
+					fadeIn.playFromStart();
+					switchToGameEndMode();
+					if (Context.getContext().getBrain().getClass() == EasyBrain.class) {
+						MongoDatabase.getDb().addLoseEasy();
+					} else {
+						MongoDatabase.getDb().addLoseHard();
 					}
-				});
+				} else if (Context.getContext().isPlayerGameWinner()) {
+					_infoLabel.setText("Du hast das Spiel gewonnen!");
+					_infoLabel.setVisible(true);
+					fadeIn.playFromStart();
+					switchToGameEndMode();
+					if (Context.getContext().getBrain().getClass() == EasyBrain.class) {
+						MongoDatabase.getDb().addWinEasy();
+					} else {
+						MongoDatabase.getDb().addWinHard();
+					}
+				} else if (Context.getContext().isDrawGame()) {
+					_infoLabel.setText("Das Spiel endete Unentschieden!");
+					_infoLabel.setVisible(true);
+					fadeIn.playFromStart();
+					switchToGameEndMode();
+				} else {
+					switchToBetMode();
+				}
 			}
-		}, 1600);
+		};				
+		t.run();
 	}
 
 	// Event Handlers
 	/**
 	 * Handles the Click-Event fired by the bet-button.
 	 */
-	public void onBetClick(ActionEvent e) throws InterruptedException {
-		updatePlayground();
-		Context.getContext().setAiBid(
-				Context.getContext().getBrain().getNextBid());
-		Context.getContext().setPlayerBid((int) getBetSlider().getValue());
-		showInfoMsg(Context.getContext().getBetResultMessage());
-		getCreditLabelAi().setText(
-				String.valueOf(Context.getContext().getAiCredits()));
-		getCreditLabelPlayer().setText(
-				String.valueOf(Context.getContext().getPlayerCredits()));
-
-		if (Context.getContext().isAiWinner()) {
-			GameField field = Context.getContext().getBrain().getNextMove();
-			setAiMove(field);
-			switchToBetMode();
-			showWinMsg();
-		} else if (Context.getContext().isPlayerWinner()) {
-			switchToMoveMode();
+	public void onBetClick(ActionEvent e) {
+		try {
+			updatePlayground();
+			Context.getContext().setAiBid(Context.getContext().getBrain().getNextBid());
+			Context.getContext().setPlayerBid((int) getBetSlider().getValue());
+			getCreditLabelAi().setText(String.valueOf(Context.getContext().getAiCredits()));
+			getCreditLabelPlayer().setText(String.valueOf(Context.getContext().getPlayerCredits()));
+			showInfoMsg(Context.getContext().getBetResultMessage());
+			
+			if (Context.getContext().isAiWinner()) {
+				GameField field = Context.getContext().getBrain().getNextMove();
+				setAiMove(field);
+			} else if (Context.getContext().isPlayerWinner()) {
+				switchToMoveMode();
+			}
+		} catch (Exception ex) {
+			System.out.print(ex.toString());
 		}
 	}
 
@@ -322,8 +316,7 @@ public class MainController {
 	 * @throws Exception
 	 */
 	public void onSettingsClick() throws Exception {
-		MainEntryPoint.showSimpleDialog(getClass().getResource(
-				"../views/SettingsView.fxml"));
+		MainEntryPoint.showSimpleDialog(getClass().getResource("../views/SettingsView.fxml"));
 	}
 
 	/**

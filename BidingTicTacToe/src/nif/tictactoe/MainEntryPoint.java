@@ -1,5 +1,6 @@
 package nif.tictactoe;
 
+import java.awt.Dialog;
 import java.net.URL;
 
 import javafx.application.Application;
@@ -18,7 +19,7 @@ import javafx.stage.StageStyle;
  */
 public class MainEntryPoint extends Application {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		Application.launch(args);
 	}
 
@@ -54,6 +55,7 @@ public class MainEntryPoint extends Application {
 			dialog.show();
 		} catch (Exception e) {
 			// TODO: handle
+			System.out.println(e.toString());
 		}
 	}
 
@@ -74,6 +76,7 @@ public class MainEntryPoint extends Application {
 			dialog.show();
 		} catch (Exception e) {
 			// TODO: handle
+			System.out.println(e.toString());
 		}
 	}
 
