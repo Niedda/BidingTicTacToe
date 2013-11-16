@@ -1,6 +1,7 @@
 *.class
 bin/**
 tmp/**
+.metadata/**
 
 # Package Files #
 *.jar

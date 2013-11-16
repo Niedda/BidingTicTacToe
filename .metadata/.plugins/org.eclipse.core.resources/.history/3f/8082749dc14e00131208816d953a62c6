@@ -1,5 +1,0 @@
-package nif.tictactoe.controllers;
-
-public class ErrorController {
-
-}
