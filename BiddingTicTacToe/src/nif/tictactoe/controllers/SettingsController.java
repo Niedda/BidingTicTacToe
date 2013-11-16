@@ -22,31 +22,15 @@ public class SettingsController implements Initializable
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     String playerName;
-    try
-    {
-      playerName = SettingHelper.getInstance().loadPlayerName();
-      PlayerName.setText(playerName);
-    }
-    catch (IOException e)
-    {
-      ErrorField.setText(String.format("Username konnte nicht von den Einstellungen geladen werden, verwende 'Player': %s\n Stack: %s", e.getMessage(), e.getStackTrace()));
-      PlayerName.setText("Player");
-    }
+    playerName = SettingHelper.getInstance().loadPlayerName();
+    PlayerName.setText(playerName);
   }
   
   @FXML
   private void onSaveClick() {
     if (!checkUsernameEmpty())
     {
-      try
-      {
-        SettingHelper.getInstance().savePlayerName(PlayerName.getText());
-      }
-      catch (IOException e)
-      {
-        ErrorField.setText(String.format("Username konnte nicht gespeichert werden: %s\nStack: %s", e.getMessage(), e.getStackTrace()));
-        return;
-      }
+      SettingHelper.getInstance().savePlayerName(PlayerName.getText());
 
       MainEntryPoint.closeDialog();
     }

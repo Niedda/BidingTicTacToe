@@ -3,7 +3,10 @@ package nif.tictactoe.model;
 import java.util.ArrayList;
 import java.util.Random;
 
-import nif.tictactoe.*;
+import javax.activity.InvalidActivityException;
+
+import nif.tictactoe.BrainBase;
+import nif.tictactoe.Context;
 
 /**
  * @author: Fabrizio Niedda
@@ -112,7 +115,7 @@ public class HardBrain extends BrainBase {
 		
 		if(freeLines.size() == 0) {
 			//There's something wrong.
-			throw new InvalidActivityException("There are no fields available for the next move.");
+			throw new UnsupportedOperationException("There are no fields available for the next move.");
 		}
 		
 		GameLine bestLine = freeLines.get(0);

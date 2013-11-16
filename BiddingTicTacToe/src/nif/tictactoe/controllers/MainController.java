@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.activity.InvalidActivityException;
+
 import nif.tictactoe.*;
 import nif.tictactoe.model.*;
 
@@ -259,7 +261,14 @@ public class MainController implements Initializable {
 				return;
 			} else if (Context.getContext().isAiWinner()) {
 				showInfoMsg("Computer hat das Spiel gewonnen.");
-				setAiMove(Context.getContext().getBrain().getNextMove());
+        		try
+                {
+                  setAiMove(Context.getContext().getBrain().getNextMove());
+                }
+                catch (InvalidActivityException exception)
+                {
+                  Context.getContext().handleException(exception);
+                }
 				currentState = gameState.moveStateAi;
 			} else if (Context.getContext().isPlayerWinner()) {
 				showInfoMsg("Player hat das Spiel gewonnen.");
