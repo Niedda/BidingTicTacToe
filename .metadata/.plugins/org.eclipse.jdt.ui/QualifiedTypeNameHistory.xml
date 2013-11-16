@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="HardBrain"/>
-<fullyQualifiedTypeName name="javafx.scene.control.MenuItem"/>
-<fullyQualifiedTypeName name="java.util.TimerTask"/>
 <fullyQualifiedTypeName name="javax.swing.Timer"/>
 <fullyQualifiedTypeName name="javax.management.timer.Timer"/>
 <fullyQualifiedTypeName name="java.util.Timer"/>
@@ -42,7 +39,6 @@
 <fullyQualifiedTypeName name="java.lang.Runnable"/>
 <fullyQualifiedTypeName name="com.sun.javafx.beans.annotations.Delegate"/>
 <fullyQualifiedTypeName name="javafx.stage.WindowEvent"/>
-<fullyQualifiedTypeName name="javafx.event.EventHandler"/>
 <fullyQualifiedTypeName name="SettingsController"/>
 <fullyQualifiedTypeName name="javafx.fxml.FXMLLoader"/>
 <fullyQualifiedTypeName name="javafx.stage.Stage"/>
@@ -60,4 +56,8 @@
 <fullyQualifiedTypeName name="java.lang.reflect.Field"/>
 <fullyQualifiedTypeName name="java.lang.NoSuchFieldError"/>
 <fullyQualifiedTypeName name="javafx.scene.control.ButtonBaseBuilder"/>
+<fullyQualifiedTypeName name="nif.tictactoe.model.GameField"/>
+<fullyQualifiedTypeName name="nif.tictactoe.Context"/>
+<fullyQualifiedTypeName name="java.awt.Dialog"/>
+<fullyQualifiedTypeName name="javafx.event.EventHandler"/>
 </qualifiedTypeNameHistroy>

@@ -13,16 +13,16 @@
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="&#x09;&#x09;&#x09;" key="selection"/>
+		<item value="" key="selection"/>
 		<list key="findhistory">
+			<item value="Biding"/>
+			<item value="getResource"/>
 			<item value="&#x09;&#x09;&#x09;"/>
 			<item value="onSettings"/>
 			<item value="DefaultStyl"/>
 			<item value="DefaultStyle"/>
 			<item value="label"/>
 			<item value="StyleManager"/>
-			<item value="_newEasyGameMenuItem"/>
-			<item value="loader.setRoot(MainEntryPoint.getRoot());"/>
 		</list>
 		<list key="replacehistory">
 		</list>
