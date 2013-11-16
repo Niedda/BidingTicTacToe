@@ -2,15 +2,15 @@ package nif.tictactoe.model;
 
 import java.util.Random;
 
+import nif.tictactoe.BrainBase;
 import nif.tictactoe.Context;
-import nif.tictactoe.SuperBrain;
 
 /**
  * @author: Fabrizio Niedda
  * @version: 1.0
  * @description: The brain for playing easy games versus the computer. 
  */
-public class EasyBrain extends SuperBrain {
+public class EasyBrain extends BrainBase {
 
 	@Override
 	public int getNextBid() {

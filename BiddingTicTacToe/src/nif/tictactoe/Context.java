@@ -18,7 +18,7 @@ public class Context {
 		//NOP
 	}
 		
-	private SuperBrain _brain;
+	private BrainBase _brain;
 				
 	private GameField[][] _playground;
 	
@@ -45,7 +45,7 @@ public class Context {
 		return _plCredits;
 	}	
 		
-	public SuperBrain getBrain() {
+	public BrainBase getBrain() {
 		return _brain;
 	}
 	
@@ -88,7 +88,7 @@ public class Context {
 		}
 	}
 		
-	public void setBrain(SuperBrain brain) {
+	public void setBrain(BrainBase brain) {
 		_brain = brain;
 	}
 

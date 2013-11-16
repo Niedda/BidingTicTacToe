@@ -10,7 +10,7 @@ import nif.tictactoe.*;
  * @version: 1.0
  * @description: The brain for playing hard games versus the computer. 
  */
-public class HardBrain extends SuperBrain {
+public class HardBrain extends BrainBase {
 
 	@Override
 	public int getNextBid() {
@@ -26,15 +26,20 @@ public class HardBrain extends SuperBrain {
 			score += 2;
 		}
 		
-		if(fieldsToWinAi == 1) {
-			return Context.getContext().getAiCredits();
+		// If you use a construct a lot of times, just make a variable for readability
+		Context context = Context.getContext();
+        int aiCredits = context.getAiCredits();
+        int playerCredits = context.getPlayerCredits();
+        
+        if(fieldsToWinAi == 1) {
+			return aiCredits;
 		} else if(fieldsToWinAi == 2) {
 			score += 2;
 		}
 		
-		if(Context.getContext().getAiCredits() < Context.getContext().getPlayerCredits()) {
+        if(aiCredits < playerCredits) {
 			score += 2;
-		} else if(Context.getContext().getAiCredits() > Context.getContext().getPlayerCredits()) {
+		} else if(aiCredits > playerCredits) {
 			score += 4;
 		}
 		Random rnd = new Random();
@@ -42,21 +47,23 @@ public class HardBrain extends SuperBrain {
 		// Set the bet depending on the score value		
 		if(score <= 4) {
 			// Make a low bet
-			int maxBet = (int) Math.round(Context.getContext().getAiCredits() / 3d);
-			if(maxBet > Context.getContext().getPlayerCredits() + 1) {
-				maxBet = Context.getContext().getPlayerCredits() + 1; 				
+			int maxBet = (int) Math.round(aiCredits / 3d);
+			if(maxBet > playerCredits + 1) {
+				maxBet = playerCredits + 1; 				
 			}
 			int bet = rnd.nextInt(maxBet) + 1;
-			if(bet > Context.getContext().getAiCredits()) {
-				return Context.getContext().getAiCredits();
+			if(bet > aiCredits) {
+				return aiCredits;
 			}			
 			return bet;
-		} else if(score <= 8) {
+		} 
+		
+		if(score <= 8) {
 			// Make a medium bet
-			int maxBet = (int) Math.round((Context.getContext().getAiCredits() / 3d) * 2d);
-			int minBet = (int) Math.round(Context.getContext().getAiCredits() / 3d);
-			if(maxBet > Context.getContext().getPlayerCredits() + 1) {
-				maxBet = Context.getContext().getPlayerCredits() + 1; 				
+			int maxBet = (int) Math.round((aiCredits / 3d) * 2d);
+			int minBet = (int) Math.round(aiCredits / 3d);
+			if(maxBet > playerCredits + 1) {
+				maxBet = playerCredits + 1; 				
 			}			
 			int bet = rnd.nextInt(maxBet) + 1;
 			
@@ -66,33 +73,33 @@ public class HardBrain extends SuperBrain {
 				}
 				bet = rnd.nextInt(maxBet) + 1;
 			}
-			if(bet > Context.getContext().getAiCredits()) {
-				return Context.getContext().getAiCredits();
-			}
-			
-			return bet;
-		} else {
-			// Make a high bet
-			int maxBet = Context.getContext().getAiCredits();
-			int minBet = (int) Math.round((Context.getContext().getAiCredits() / 3d) * 2d);
-			if(maxBet > Context.getContext().getPlayerCredits() + 1) {
-				maxBet = Context.getContext().getPlayerCredits() + 1; 				
-			}			
-			int bet = rnd.nextInt(maxBet) + 1;
-			
-			while(bet < minBet) {
-				bet = rnd.nextInt(maxBet) + 1;
-			}
-			if(bet > Context.getContext().getAiCredits()) {
-				return Context.getContext().getAiCredits();
+			if(bet > aiCredits) {
+				return aiCredits;
 			}
 			
 			return bet;
 		}
+		
+		// Make a high bet
+		int maxBet = aiCredits;
+		int minBet = (int) Math.round((aiCredits / 3d) * 2d);
+		if(maxBet > playerCredits + 1) {
+			maxBet = playerCredits + 1; 				
+		}			
+		int bet = rnd.nextInt(maxBet) + 1;
+		
+		while(bet < minBet) {
+			bet = rnd.nextInt(maxBet) + 1;
+		}
+		if(bet > aiCredits) {
+			return aiCredits;
+		}
+		
+		return bet;
 	}
 
 	@Override
-	public GameField getNextMove() {
+	public GameField getNextMove() throws InvalidActivityException {
 		ArrayList<GameField> aiFields = getAiFields();
 		ArrayList<GameField> plFields = getPlayerFields();
 		GameField[][] gameFields = Context.getContext().getPlayground();
@@ -105,7 +112,7 @@ public class HardBrain extends SuperBrain {
 		
 		if(freeLines.size() == 0) {
 			//There's something wrong.
-			return null;
+			throw new InvalidActivityException("There are no fields available for the next move.");
 		}
 		
 		GameLine bestLine = freeLines.get(0);

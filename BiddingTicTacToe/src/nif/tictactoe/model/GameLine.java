@@ -143,6 +143,8 @@ public class GameLine {
 	 * @return A list of {@link GameLine}.
 	 */
 	public static ArrayList<GameLine> getPossibleGameLines() {
+	    // You can calculate those. There are 2 unit vectors (0,1) and (1,0), which you can also combine into (1,1) and (-1,1), which cover all the possibilities if the length of the vector must be 3 (|a->| == 3)
+	    // It results in the 
 		GameField[][] playground = Context.getContext().getPlayground();
 		ArrayList<GameLine> lines = new ArrayList<>();
 		lines.add(new GameLine(

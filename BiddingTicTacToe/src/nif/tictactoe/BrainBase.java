@@ -2,6 +2,8 @@ package nif.tictactoe;
 
 import java.util.ArrayList;
 
+import javax.activity.InvalidActivityException;
+
 import nif.tictactoe.model.*;
 
 /**
@@ -9,7 +11,7 @@ import nif.tictactoe.model.*;
  * @version: 1.0
  * @description: The basic abstract class for all computer-players.
  */
-public abstract class SuperBrain {
+public abstract class BrainBase {
 
 	// Privates
 	private int _fieldsToWinAi;
@@ -119,8 +121,9 @@ public abstract class SuperBrain {
 
 	/**
 	 * Calculate the next move from the computer.
+	 * @throws InvalidActivityException
 	 */
-	public abstract GameField getNextMove();
+	public abstract GameField getNextMove() throws InvalidActivityException;
 
 	/**
 	 * Calculate the next bid from the computer.
