@@ -28,7 +28,7 @@ public class MainEntryPoint extends Application {
 	@Override
 	public void start(Stage mainStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("views/MainView.fxml"));
-		mainStage.setTitle("Biding Tic Tac Toe");
+		mainStage.setTitle("Bidding Tic Tac Toe");
 		mainStage.getIcons().add(new Image("file:images/tictactoeIcon.png"));
 		mainStage.setScene(new Scene(root));
 		mainStage.show();

@@ -9,6 +9,7 @@ import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -24,27 +25,45 @@ import javafx.util.Duration;
 public class MainController {
 
 	// Graphical User Interface elements
-	public Button _betButton;
-	public Slider _betSlider;
-	public Button _field00;
-	public Button _field01;
-	public Button _field02;
-	public Button _field10;
-	public Button _field20;
-	public Button _field11;
-	public Button _field12;
-	public Button _field22;
-	public Button _field21;
-	public Label _aiCredit;
-	public Label _plCredit;
-	public Label _infoLabel;
-	public MenuItem _newEasyGameMenuItem;
-	public MenuItem _newHardGameMenuItem;
+	@FXML
+	private Button _betButton;
+	@FXML
+	private Slider _betSlider;
+	@FXML
+	private Button _field00;
+	@FXML
+	private Button _field01;
+	@FXML
+	private Button _field02;
+	@FXML
+	private Button _field10;
+	@FXML
+	private Button _field20;
+	@FXML
+	private Button _field11;
+	@FXML
+	private Button _field12;
+	@FXML
+	private Button _field22;
+	@FXML
+	private Button _field21;
+	@FXML
+	private Label _aiCredit;
+	@FXML
+	private Label _plCredit;
+	@FXML
+	private Label _infoLabel;
+	@FXML
+	private MenuItem _newEasyGameMenuItem;
+	@FXML
+	private MenuItem _newHardGameMenuItem;
 
-	// Privates
+	// Private Fields
 	private Button[] _ticTacToeGrid;
 
-	private FadeTransition fadeIn = new FadeTransition(Duration.millis(1500));
+	private FadeTransition fadeIn = new FadeTransition(Duration.millis(700));
+
+	private gameState currentState = gameState.disabledPlayground;
 
 	// Private Getters
 	private Button getBetButton() {
@@ -69,38 +88,25 @@ public class MainController {
 
 	private Button[] getTicTacToeGrid() {
 		if (_ticTacToeGrid == null) {
-			_ticTacToeGrid = new Button[] { _field00, _field01, _field02,
-					_field10, _field11, _field12, _field20, _field21, _field22, };
+			_ticTacToeGrid = new Button[] { _field00, _field01, _field02, _field10, _field11, _field12, _field20, _field21, _field22, };
 		}
 		return _ticTacToeGrid;
 	}
-
+	
 	// Private Methods
 	/**
 	 * Initialize the fade effect for displaying the info-label.
 	 */
 	private void initializeFade() {
 		fadeIn.setNode(_infoLabel);
-		fadeIn.setFromValue(1.0);
-		fadeIn.setToValue(0.0);
+		fadeIn.setFromValue(0.6);
+		fadeIn.setToValue(0.3);
 		fadeIn.setCycleCount(1);
 		fadeIn.setAutoReverse(false);
 	}
 
 	/**
-	 * Switch to the game-end-mode. The GUI-play-elements are getting disabled.
-	 */
-	private void switchToGameEndMode() {
-		for (Button btn : getTicTacToeGrid()) {
-			btn.setDisable(true);
-		}
-		getBetButton().setDisable(true);
-		getBetSlider().setDisable(true);		
-	}
-
-	/**
-	 * Switch to the game-end-mode. The graphical user interface elements are
-	 * getting disabled.
+	 * Update the context with the current playground state.
 	 */
 	private void updatePlayground() {
 		GameField[][] playground = new GameField[3][3];
@@ -117,6 +123,15 @@ public class MainController {
 	}
 
 	/**
+	 * Update the context with the bets and calculate the new balance.
+	 */
+	private void updateContext() {
+		Context.getContext().setAiBid(Context.getContext().getBrain().getNextBid());
+		Context.getContext().setPlayerBid((int) getBetSlider().getValue());
+		Context.getContext().setBalance();
+	}
+
+	/**
 	 * Maps the computer move to the graphical user interface.
 	 */
 	private void setAiMove(GameField field) {
@@ -127,21 +142,22 @@ public class MainController {
 			f.setAccessible(true);
 			Button b = (Button) f.get(this);
 			b.setText("X");
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+		} catch (Exception e) {
 			// TODO log exception
 		}
 	}
 
-	// Publics
 	/**
 	 * Switch to the bet mode and disable the grid.
 	 */
-	public void switchToBetMode() {
+	private void switchToBetMode() {
 		for (Button btn : getTicTacToeGrid()) {
 			btn.setDisable(true);
 		}
+
 		getBetButton().setDisable(false);
 		getBetSlider().setDisable(false);
+
 		if (getCreditLabelPlayer().getText().equals("0")) {
 			getBetSlider().setDisable(true);
 		} else {
@@ -154,7 +170,7 @@ public class MainController {
 	/**
 	 * Switch to the move mode and enable the grid.
 	 */
-	public void switchToMoveMode() {
+	private void switchToMoveMode() {
 		for (Button btn : getTicTacToeGrid()) {
 			if (btn.getText().equals("")) {
 				btn.setDisable(false);
@@ -165,101 +181,155 @@ public class MainController {
 	}
 
 	/**
+	 * Switch to the game-end-mode. The GUI-play-elements are getting disabled.
+	 */
+	private void switchToDisabledMode() {
+		for (Button btn : getTicTacToeGrid()) {
+			btn.setDisable(true);
+		}
+		getBetButton().setDisable(true);
+		getBetSlider().setDisable(true);
+	}
+
+	/**
 	 * Resets the playground to the default values.
 	 */
-	public void resetPlayground() {
+	private void resetPlayground() {
 		for (Button button : getTicTacToeGrid()) {
 			button.setText("");
 		}
 		getCreditLabelAi().setText("8");
 		getCreditLabelPlayer().setText("8");
+		Context.getContext().resetContext();
+		switchToBetMode();
+		getInfoLabel().setVisible(false);
+		currentState = gameState.betState;
 	}
 
 	/**
 	 * Show an Info Message as splash screen which disappears after 1.5 seconds.
 	 */
-	public void showInfoMsg(String message) {
+	private void showInfoMsg(String message) {
 		_infoLabel.setText(message);
 		_infoLabel.setVisible(true);
 		
-		fadeIn.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg) {				
-				_infoLabel.setText("");
-				_infoLabel.setVisible(false);
-				if(Context.getContext().isAiWinner()) {
-					showWinMsg();				
-				} else if(Context.getContext().isPlayerWinner()) {
-					switchToMoveMode();
-				}
-			}			
-		});		
-		fadeIn.playFromStart();
+		//Prevent user input while evaluating.
+		switchToDisabledMode();
+		
+		if (currentState != gameState.disabledPlayground) {
+			fadeIn.onFinishedProperty().set(onFadeFinishedEvent());
+			fadeIn.playFromStart();			
+		} else {
+			_infoLabel.setOpacity(0.6);
+		}
 	}
 
 	/**
-	 * Checks if the game has a winner and displays the winner message.
+	 * Handles the fade finished event.
 	 */
-	public void showWinMsg() {
-		updatePlayground();
-		Thread t = new Thread(){
+	private EventHandler<ActionEvent> onFadeFinishedEvent() {
+		return new EventHandler<ActionEvent>() {
+
 			@Override
-			public void run() {
-				updatePlayground();
-				if (Context.getContext().isAiGameWinner()) {
-					_infoLabel.setText("Der Computer hat das Spiel gewonnen!");
-					_infoLabel.setVisible(true);
-					fadeIn.playFromStart();
-					switchToGameEndMode();
-					if (Context.getContext().getBrain().getClass() == EasyBrain.class) {
-						MongoDatabase.getDb().addLoseEasy();
-					} else {
-						MongoDatabase.getDb().addLoseHard();
-					}
-				} else if (Context.getContext().isPlayerGameWinner()) {
-					_infoLabel.setText("Du hast das Spiel gewonnen!");
-					_infoLabel.setVisible(true);
-					fadeIn.playFromStart();
-					switchToGameEndMode();
-					if (Context.getContext().getBrain().getClass() == EasyBrain.class) {
-						MongoDatabase.getDb().addWinEasy();
-					} else {
-						MongoDatabase.getDb().addWinHard();
-					}
-				} else if (Context.getContext().isDrawGame()) {
-					_infoLabel.setText("Das Spiel endete Unentschieden!");
-					_infoLabel.setVisible(true);
-					fadeIn.playFromStart();
-					switchToGameEndMode();
-				} else {
-					switchToBetMode();
-				}
+			public void handle(ActionEvent event) {
+				_infoLabel.setText("");
+				_infoLabel.setVisible(false);
+				checkForWinner();
 			}
-		};				
-		t.run();
+		};
+	}
+
+	/**
+	 * Updates the current state according to the game situation.
+	 */
+	private void setState() {
+		switch (currentState) {
+		case betState:
+		case aiMoveState:
+			if (Context.getContext().isDraw()) {
+				showInfoMsg("Unentschieden.");
+			} else if (Context.getContext().isAiWinner()) {
+				showInfoMsg("Computer hat das Spiel gewonnen.");
+				setAiMove(Context.getContext().getBrain().getNextMove());
+				currentState = gameState.aiMoveState;
+			} else if (Context.getContext().isPlayerWinner()) {
+				showInfoMsg("Player hat das Spiel gewonnen.");
+				currentState = gameState.moveState;
+			}
+			break;
+		case moveState:
+			currentState = gameState.betState;
+			break;
+		case disabledPlayground:
+		default:
+			return;
+		}
+	}
+
+	/**
+	 * Checks if the game has a winner.
+	 */
+	private void checkForWinner() {
+		updatePlayground();
+
+		// Check for a winner.
+		if (Context.getContext().isPlayerGameWinner()) {
+			switchToDisabledMode();
+			currentState = gameState.disabledPlayground;
+			showInfoMsg("Spieler hat das Spiel gewonnen.");
+			return;
+		} else if (Context.getContext().isAiGameWinner()) {
+			switchToDisabledMode();
+			currentState = gameState.disabledPlayground;
+			showInfoMsg("Computer hat das Spiel gewonnen.");
+			return;
+		} else if (Context.getContext().isDrawGame()) {
+			switchToDisabledMode();
+			currentState = gameState.disabledPlayground;
+			showInfoMsg("Unentschieden.");
+			return;
+		}
+		
+		//If no one has win the game yet switch the mode
+		switch(currentState) {
+		case aiMoveState:
+		case betState:
+			switchToBetMode();
+			break;
+		case moveState:
+			switchToMoveMode();
+			break;
+		case disabledPlayground:
+		default:
+			return;
+		}
+	}
+
+	/**
+	 * Possible game states.
+	 */
+	private enum gameState {
+		disabledPlayground, moveState, betState, aiMoveState,
 	}
 
 	// Event Handlers
 	/**
 	 * Handles the Click-Event fired by the bet-button.
 	 */
-	public void onBetClick(ActionEvent e) {
+	@FXML
+	private void onBetClick(ActionEvent e) {
 		try {
 			updatePlayground();
-			Context.getContext().setAiBid(Context.getContext().getBrain().getNextBid());
-			Context.getContext().setPlayerBid((int) getBetSlider().getValue());
+			updateContext();
+
+			// Update the GUI with the new values.
 			getCreditLabelAi().setText(String.valueOf(Context.getContext().getAiCredits()));
 			getCreditLabelPlayer().setText(String.valueOf(Context.getContext().getPlayerCredits()));
-			showInfoMsg(Context.getContext().getBetResultMessage());
-			
-			if (Context.getContext().isAiWinner()) {
-				GameField field = Context.getContext().getBrain().getNextMove();
-				setAiMove(field);
-			} else if (Context.getContext().isPlayerWinner()) {
-				switchToMoveMode();
-			}
+
+			// Adjust the game state.
+			setState();
 		} catch (Exception ex) {
-			System.out.print(ex.toString());
+			// TODO: log exception
 		}
 	}
 
@@ -267,35 +337,35 @@ public class MainController {
 	 * Handles the Click-Event fired by the grid-button if a move by the player
 	 * was made.
 	 */
-	public void onGridButtonClick(ActionEvent e) {
+	@FXML
+	private void onGridButtonClick(ActionEvent e) {
 		Button btn = (Button) e.getSource();
 		btn.setText("O");
-		switchToBetMode();
-		showWinMsg();
+		updatePlayground();
+		updateContext();
+		setState();
 	}
 
 	/**
 	 * Handles the Click-Event fired by the new easy game menu button.
 	 */
-	public void onNewEasyGameClick() {
+	@FXML
+	private void onNewEasyGameClick() {
 		initializeFade();
 		Context.getContext().setBrain(new EasyBrain());
 		Context.getContext().resetContext();
 		resetPlayground();
-		switchToBetMode();
-		getInfoLabel().setVisible(false);
 	}
 
 	/**
 	 * Handles the Click-Event fired by the new hard game menu button.
 	 */
-	public void onNewHardGameClick() {
+	@FXML
+	private void onNewHardGameClick() {
 		initializeFade();
 		Context.getContext().setBrain(new HardBrain());
 		Context.getContext().resetContext();
 		resetPlayground();
-		switchToBetMode();
-		getInfoLabel().setVisible(false);
 	}
 
 	/**
@@ -303,7 +373,8 @@ public class MainController {
 	 * 
 	 * @throws Exception
 	 */
-	public void onSettingsClick() throws Exception {
+	@FXML
+	private void onSettingsClick() throws Exception {
 		MainEntryPoint.showSimpleDialog(getClass().getResource("../views/SettingsView.fxml"));
 	}
 
@@ -312,22 +383,24 @@ public class MainController {
 	 * 
 	 * @throws IOException
 	 */
-	public void onAboutClick() throws IOException {
+	@FXML
+	private void onAboutClick() throws IOException {
 		MainEntryPoint.showModalDialog(getClass().getResource("../views/AboutView.fxml"));
 	}
 
 	/**
 	 * Handles the Click-Event fired by the statics menu button.
 	 */
-	public void onStatisticClick() {
-		MainEntryPoint.showModalDialog(getClass().getResource(
-				"../views/StatisticView.fxml"));
+	@FXML
+	private void onStatisticClick() {
+		MainEntryPoint.showModalDialog(getClass().getResource("../views/StatisticView.fxml"));
 	}
 
 	/**
 	 * Event Handler if the Menu Button exit is clicked.
 	 */
-	public void onFinishClick() throws Exception {
+	@FXML
+	private void onFinishClick() throws Exception {
 		Platform.exit();
 	}
 }

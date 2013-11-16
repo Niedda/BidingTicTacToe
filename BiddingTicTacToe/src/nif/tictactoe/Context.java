@@ -11,13 +11,11 @@ import nif.tictactoe.model.*;
  */
 public class Context {
 
-	//Privates
+	//Private
 	private Context() {
 		//NOP
 	}
-	
-	private static Context _context;
-	
+		
 	private SuperBrain _brain;
 				
 	private GameField[][] _playground;
@@ -29,8 +27,7 @@ public class Context {
 	private int _aiCredits;
 	
 	private int _plCredits;
-	
-	
+		
 	//Getters
 	public int getAiCredits() {
 		return _aiCredits;
@@ -55,20 +52,7 @@ public class Context {
 	public GameField[][] getPlayground() {
 		return _playground;
 	}
-	
-	public String getBetResultMessage() {
-    	if(Context.getContext().isDraw()) {
-   		 return "Unentschieden!";   		 
-    	}
-    	setBalance();
-		if(isPlayerWinner()) {
-			return String.format("Computer bietet %s - Du gewinnst!", getAiBid());
-		} else {
-			return String.format("Computer bietet %s und gewinnt!", getAiBid());
-		} 
-	}
-	
-	
+		
 	//Setters
 	public void setAiCredits(int credits) {
 		_aiCredits = credits;
@@ -90,7 +74,7 @@ public class Context {
 		if(isPlayerWinner()) {
 			setPlayerCredits(getPlayerCredits() - getPlayerBid());
 			setAiCredits(getAiCredits() + getPlayerBid());
-		} else {
+		} else if(isAiWinner()) {
 			setAiCredits(getAiCredits() - getAiBid());
 			setPlayerCredits(getPlayerCredits() + getAiBid());
 		}
@@ -104,9 +88,8 @@ public class Context {
 		_playground = playground;
 		_brain.UpdateBrain();
 	}
-		
-	
-	//Publics
+			
+	//Public
 	public boolean isPlayerGameWinner() {
 		ArrayList<GameLine> lines = GameLine.getPossibleGameLines();
 		ArrayList<GameField> plFields = Context.getContext().getBrain().getPlayerFields();
@@ -163,9 +146,10 @@ public class Context {
 		setAiCredits(8);
 		setPlayerCredits(8);		
 	}
-	
-	
+		
 	//Statics
+	private static Context _context;
+	
 	/**
 	 * The only existing instance of this class.
 	 * @return {@link Context}

@@ -13,16 +13,12 @@ public class StatisticController implements Initializable {
 	
 	@FXML
 	private Label _easyWin;
-	
 	@FXML
 	private Label _easyLose;
-	
 	@FXML
 	private Label _hardWin;
-	
 	@FXML
 	private Label _hardLose;
-
 	@FXML
 	private Label _title;
 	

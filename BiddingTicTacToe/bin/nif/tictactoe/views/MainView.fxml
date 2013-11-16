@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<VBox id="mainView" maxHeight="300.0" maxWidth="530.0" minHeight="300.0" minWidth="530.0" prefHeight="300.0" prefWidth="530.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="nif.tictactoe.controllers.MainController">
+<VBox id="mainView" maxHeight="300.0" maxWidth="530.0" minHeight="300.0" minWidth="530.0" prefHeight="300.0" prefWidth="530.0" snapToPixel="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="nif.tictactoe.controllers.MainController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>

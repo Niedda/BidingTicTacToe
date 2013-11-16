@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import nif.tictactoe.*;
 
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -12,11 +13,14 @@ import javafx.scene.control.TextField;
 public class SettingsController implements Initializable {
 		
 	//UI-Fields
-	public TextField PlayerName;
-	public Label ErrorField;
+	@FXML
+	private TextField PlayerName;
+	@FXML 
+	private Label ErrorField;
 	
 	//Event Handlers
-	public void onSaveClick() {
+	@FXML
+	private void onSaveClick() {
 		if(PlayerName.getText().equals("")) {
 			//Invalid Name set to the default
 			ErrorField.setText("Bite einen gültigen Name eingeben.");
@@ -25,8 +29,9 @@ public class SettingsController implements Initializable {
 		SettingHelper.getInstance().savePlayerName(PlayerName.getText());
 		MainEntryPoint.closeDialog();
 	}	
-	
-	public void onTextChanged() {
+
+	@FXML
+	private void onTextChanged() {
 		if(PlayerName.getText().equals("")) {
 			//Invalid Name set to the default
 			ErrorField.setText("Bite einen gültigen Name eingeben.");
