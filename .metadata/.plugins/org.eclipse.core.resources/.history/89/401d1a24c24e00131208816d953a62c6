@@ -1,0 +1,12 @@
+package nif.tictactoe.controllers;
+
+import nif.tictactoe.Context;
+
+public class ErrorController {
+
+	@FXML
+	private void sendError() {
+		
+	}
+	
+}

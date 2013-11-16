@@ -2,6 +2,8 @@ package nif.tictactoe;
 
 import java.util.ArrayList;
 
+import javafx.application.Platform;
+
 import nif.tictactoe.model.*;
 
 /**
@@ -27,6 +29,8 @@ public class Context {
 	private int _aiCredits;
 	
 	private int _plCredits;
+
+	private Exception _lastError;
 		
 	//Getters
 	public int getAiCredits() {
@@ -51,6 +55,10 @@ public class Context {
 	
 	public GameField[][] getPlayground() {
 		return _playground;
+	}	
+
+	public Exception getLastError() {
+		return _lastError;
 	}
 		
 	//Setters
@@ -89,6 +97,11 @@ public class Context {
 		_brain.UpdateBrain();
 	}
 			
+	public void handleException(Exception ex) {
+		_lastError = ex;
+		MainEntryPoint.showModalDialog(getClass().getResource("views/ErrorView.fxml"));
+	}	
+	
 	//Public
 	public boolean isPlayerGameWinner() {
 		ArrayList<GameLine> lines = GameLine.getPossibleGameLines();

@@ -1,0 +1,30 @@
+package nif.tictactoe.controllers;
+
+import java.awt.Desktop;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
+
+import nif.tictactoe.Context;
+import nif.tictactoe.MainEntryPoint;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+
+public class ErrorController {
+
+	@FXML
+	private void onSubmitClick() {
+		try {
+			String error = "mailto:gugu@gaga.de?subject=ErrorinBiddingTicTacToe&body=".concat(Context.getContext().getLastError().toString());
+			String append = URLEncoder.encode(Context.getContext().getLastError().toString());			
+			URI blah = new URI("mailto:gugu@gaga.de?subject=ErrorinBiddingTicTacToe&body=".concat(append));
+			
+			Desktop.getDesktop().mail(blah);
+			MainEntryPoint.closeDialog();
+			MainEntryPoint.launch(null);
+		} catch (Exception e) {
+			//If it fails to submit a fail -.-
+			Platform.exit();
+		}
+	}
+}

@@ -61,6 +61,9 @@ public class HardBrain extends SuperBrain {
 			int bet = rnd.nextInt(maxBet) + 1;
 			
 			while(bet < minBet) {
+				if(minBet > maxBet) {
+					minBet = maxBet;
+				}
 				bet = rnd.nextInt(maxBet) + 1;
 			}
 			if(bet > Context.getContext().getAiCredits()) {

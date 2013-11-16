@@ -37,8 +37,8 @@ public class SettingHelper {
 			is = new FileInputStream(f);
 			props.load(is);
 			return Integer.parseInt(props.getProperty(propName, "0"));
-		} catch (Exception e) {
-			// TODO: add exception handling
+		} catch (Exception ex) {
+			Context.getContext().handleException(ex);
 			return 0;
 		}
 	}
@@ -50,8 +50,8 @@ public class SettingHelper {
 			File f = getPropertyFile();
 			OutputStream out = new FileOutputStream(f);
 			props.store(out, null);
-		} catch (Exception e) {
-			// TODO: add exception handling
+		} catch (Exception ex) {
+			Context.getContext().handleException(ex);
 		}
 	}
 
@@ -62,8 +62,8 @@ public class SettingHelper {
 		if (!f.exists()) {
 			try {
 				f.createNewFile();
-			} catch (IOException e) {
-				// TODO log exception
+			} catch (IOException ex) {
+				Context.getContext().handleException(ex);
 			}
 		}
 		return f;
@@ -77,8 +77,8 @@ public class SettingHelper {
 			File f = getPropertyFile();
 			OutputStream out = new FileOutputStream(f);
 			props.store(out, null);
-		} catch (Exception e) {
-			// TODO: add exception handling
+		} catch (Exception ex) {
+			Context.getContext().handleException(ex);
 		}
 	}
 
@@ -92,8 +92,8 @@ public class SettingHelper {
 			props.load(is);
 			String name = (String) props.getProperty(_propertyNamePlayer, _defaultName);
 			return name;
-		} catch (Exception e) {
-			// TODO: add exception handling
+		} catch (Exception ex) {
+			Context.getContext().handleException(ex);
 			return "";
 		}
 	}

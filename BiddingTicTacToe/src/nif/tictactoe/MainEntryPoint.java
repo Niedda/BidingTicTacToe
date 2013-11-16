@@ -1,5 +1,7 @@
 package nif.tictactoe;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javafx.application.Application;
@@ -18,21 +20,32 @@ import javafx.stage.StageStyle;
  */
 public class MainEntryPoint extends Application {
 
-	public static void main(String[] args) {		
-		Application.launch(args);
+	public static void main(String[] args) {
+		try {
+			launch(args);
+		} catch (Throwable t) {
+			System.out.println(t.getMessage());
+		}
 	}
 
 	/**
-	 * Main start method for the JavaFx-application. *
+	 * Main start method for the JavaFx-application.
+	 * 
+	 * @throws IOException
+	 *             *
 	 */
 	@Override
-	public void start(Stage mainStage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("views/MainView.fxml"));
-		mainStage.setTitle("Bidding Tic Tac Toe");
-		mainStage.getIcons().add(new Image("file:images/tictactoeIcon.png"));
-		mainStage.setScene(new Scene(root));
-		mainStage.show();
-		_mainStage = mainStage;	
+	public void start(Stage mainStage) {
+		try {
+			Parent root = FXMLLoader.load(getClass().getResource("views/MainView.fxml"));
+			mainStage.setTitle("Bidding Tic Tac Toe");
+			mainStage.getIcons().add(new Image("file:images/tictactoeIcon.png"));
+			mainStage.setScene(new Scene(root));
+			mainStage.show();
+			_mainStage = mainStage;
+		} catch (Exception ex) {
+			System.out.println(ex.toString());
+		}
 	}
 
 	/**
@@ -49,12 +62,11 @@ public class MainEntryPoint extends Application {
 			dialog.initStyle(StageStyle.UTILITY);
 			dialog.initOwner(_mainStage);
 			FXMLLoader loader = new FXMLLoader(fxmlFile);
-			Parent parent = (Parent) loader.load();			
+			Parent parent = (Parent) loader.load();
 			dialog.setScene(new Scene(parent));
 			dialog.show();
-		} catch (Exception e) {
-			// TODO: handle
-			System.out.println(e.toString());
+		} catch (Exception ex) {
+			Context.getContext().handleException(ex);
 		}
 	}
 
@@ -73,9 +85,21 @@ public class MainEntryPoint extends Application {
 			Parent loader = FXMLLoader.load(fxmlFile);
 			dialog.setScene(new Scene(loader));
 			dialog.show();
-		} catch (Exception e) {
-			// TODO: handle
-			System.out.println(e.toString());
+		} catch (Exception ex) {
+			Context.getContext().handleException(ex);
+		}
+	}
+
+	public static void resetGameAfterError() {
+		try {
+			_mainStage.close();
+			Parent root = FXMLLoader.load(MainEntryPoint.class.getResource("views/MainView.fxml"));
+			_mainStage.setTitle("Bidding Tic Tac Toe");
+			_mainStage.getIcons().add(new Image("file:images/tictactoeIcon.png"));
+			_mainStage.setScene(new Scene(root));
+			_mainStage.show();
+		} catch (Exception ex) {
+			System.out.println(ex.toString());
 		}
 	}
 
@@ -87,9 +111,9 @@ public class MainEntryPoint extends Application {
 
 	private static void setDialogStage(Stage stage) {
 		if (_dialogStage != null) {
-			_dialogStage.close();	
+			_dialogStage.close();
 		}
-		_dialogStage = stage;	
+		_dialogStage = stage;
 	}
 
 	private static Stage _dialogStage;

@@ -1,0 +1,25 @@
+package nif.tictactoe.controllers;
+
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import javafx.fxml.Initializable;
+import javafx.scene.control.Hyperlink;
+
+public class ErrorController {
+
+	private String _error;
+	
+	private void onSubmitClick() {
+		try {
+			Desktop.getDesktop().mail(new URI("mailto:gugu@gaga.de?subject=Error in BiddingTicTacToe&body=".concat(_error)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+	}
+	
+}

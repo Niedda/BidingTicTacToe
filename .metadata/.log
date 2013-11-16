@@ -6752,3 +6752,12 @@ Binding(CTRL+SHIFT+\,
 		,,true),null),
 	org.eclipse.ui.defaultAcceleratorConfiguration,
 	org.eclipse.wst.sse.ui.structuredTextEditorScope,,,system)
+
+!ENTRY org.eclipse.jdt.launching 4 120 2013-11-16 15:57:34.996
+!MESSAGE Cannot connect to VM
+!STACK 0
+java.io.IOException: Received invalid handshake
+	at org.eclipse.jdi.internal.connect.SocketTransportService.readHandshake(SocketTransportService.java:218)
+	at org.eclipse.jdi.internal.connect.SocketTransportService.access$7(SocketTransportService.java:212)
+	at org.eclipse.jdi.internal.connect.SocketTransportService$3.run(SocketTransportService.java:183)
+	at java.lang.Thread.run(Unknown Source)

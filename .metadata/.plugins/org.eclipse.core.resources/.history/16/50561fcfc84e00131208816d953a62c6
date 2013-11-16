@@ -1,0 +1,23 @@
+package nif.tictactoe.controllers;
+
+import java.awt.Desktop;
+import java.net.URI;
+
+import nif.tictactoe.Context;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+
+public class ErrorController {
+
+	@FXML
+	private void onSubmitClick() {
+		try {
+			URI msg = new URI("mailto:gugu@gaga.de?subject=ErrorinBiddingTicTacToe&body=".concat(Context.getContext().getLastError().toString()));
+			msg.normalize();
+			Desktop.getDesktop().mail();
+		} catch (Exception e) {
+			//If it fails to submit a fail -.-
+			Platform.exit();
+		}
+	}
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="200.0" maxWidth="300.0" minHeight="200.0" minWidth="300.0" prefHeight="200.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="nif.tictactoe.controllers.ErrorController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <Label layoutX="28.0" layoutY="25.0" text="Fehler">
+      <font>
+        <Font name="System Bold" size="16.0" />
+      </font>
+    </Label>
+    <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="128.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+        <Image url="@../../../../images/meme-error.jpg" />
+      </image>
+    </ImageView>
+    <Label layoutX="28.0" layoutY="64.0" text="Well... Shit happens..." />
+    <Hyperlink layoutX="28.0" layoutY="159.0" onAction="#onSubmitClick" text="Submit the error" textFill="#0029ff" visited="false" />
+  </children>
+</AnchorPane>
