@@ -1,7 +1,8 @@
 *.class
-bin/**
-tmp/**
+bin/
+tmp/
 .metadata/**
+.classpath
 
 # Package Files #
 *.jar
