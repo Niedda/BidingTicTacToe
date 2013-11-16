@@ -2,14 +2,20 @@ package nif.tictactoe.controllers;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import nif.tictactoe.*;
 import nif.tictactoe.model.*;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -22,7 +28,7 @@ import javafx.util.Duration;
  * @description: Main User Interface Controller which keeps track of the
  *               graphical elements.
  */
-public class MainController {
+public class MainController implements Initializable {
 
 	// Graphical User Interface elements
 	@FXML
@@ -92,7 +98,7 @@ public class MainController {
 		}
 		return _ticTacToeGrid;
 	}
-	
+
 	// Private Methods
 	/**
 	 * Initialize the fade effect for displaying the info-label.
@@ -165,6 +171,7 @@ public class MainController {
 			getBetSlider().setMin(1);
 		}
 		getBetSlider().setMax(Double.parseDouble(getCreditLabelPlayer().getText()));
+		currentState = gameState.betState;
 	}
 
 	/**
@@ -178,6 +185,7 @@ public class MainController {
 		}
 		getBetButton().setDisable(true);
 		getBetSlider().setDisable(true);
+		currentState = gameState.moveStatePlayer;
 	}
 
 	/**
@@ -212,13 +220,13 @@ public class MainController {
 	private void showInfoMsg(String message) {
 		_infoLabel.setText(message);
 		_infoLabel.setVisible(true);
-		
-		//Prevent user input while evaluating.
+
+		// Prevent user input while evaluating.
 		switchToDisabledMode();
-		
+
 		if (currentState != gameState.disabledPlayground) {
 			fadeIn.onFinishedProperty().set(onFadeFinishedEvent());
-			fadeIn.playFromStart();			
+			fadeIn.playFromStart();
 		} else {
 			_infoLabel.setOpacity(0.6);
 		}
@@ -234,7 +242,7 @@ public class MainController {
 			public void handle(ActionEvent event) {
 				_infoLabel.setText("");
 				_infoLabel.setVisible(false);
-				checkForWinner();
+				updateGameState();
 			}
 		};
 	}
@@ -242,34 +250,30 @@ public class MainController {
 	/**
 	 * Updates the current state according to the game situation.
 	 */
-	private void setState() {
+	private void showMessage() {
 		switch (currentState) {
 		case betState:
-		case aiMoveState:
 			if (Context.getContext().isDraw()) {
 				showInfoMsg("Unentschieden.");
+				currentState = gameState.drawState;
+				return;
 			} else if (Context.getContext().isAiWinner()) {
 				showInfoMsg("Computer hat das Spiel gewonnen.");
 				setAiMove(Context.getContext().getBrain().getNextMove());
-				currentState = gameState.aiMoveState;
+				currentState = gameState.moveStateAi;
 			} else if (Context.getContext().isPlayerWinner()) {
 				showInfoMsg("Player hat das Spiel gewonnen.");
-				currentState = gameState.moveState;
 			}
 			break;
-		case moveState:
-			currentState = gameState.betState;
-			break;
-		case disabledPlayground:
 		default:
 			return;
 		}
 	}
 
 	/**
-	 * Checks if the game has a winner.
+	 * Checks if the game has a winner or switch to the next state.
 	 */
-	private void checkForWinner() {
+	private void updateGameState() {
 		updatePlayground();
 
 		// Check for a winner.
@@ -277,11 +281,23 @@ public class MainController {
 			switchToDisabledMode();
 			currentState = gameState.disabledPlayground;
 			showInfoMsg("Spieler hat das Spiel gewonnen.");
+
+			if (Context.getContext().getBrain().getClass() == EasyBrain.class) {
+				SettingHelper.getInstance().addPlayerEasyWin();
+			} else {
+				SettingHelper.getInstance().addPlayerHardWin();
+			}
 			return;
 		} else if (Context.getContext().isAiGameWinner()) {
 			switchToDisabledMode();
 			currentState = gameState.disabledPlayground;
 			showInfoMsg("Computer hat das Spiel gewonnen.");
+
+			if (Context.getContext().getBrain().getClass() == EasyBrain.class) {
+				SettingHelper.getInstance().addPlayerEasyLose();
+			} else {
+				SettingHelper.getInstance().addPlayerHardLose();
+			}
 			return;
 		} else if (Context.getContext().isDrawGame()) {
 			switchToDisabledMode();
@@ -289,15 +305,16 @@ public class MainController {
 			showInfoMsg("Unentschieden.");
 			return;
 		}
-		
-		//If no one has win the game yet switch the mode
-		switch(currentState) {
-		case aiMoveState:
+
+		// If no one has win the game yet switch the mode
+		switch (currentState) {
 		case betState:
-			switchToBetMode();
-			break;
-		case moveState:
 			switchToMoveMode();
+			break;
+		case moveStatePlayer:
+		case moveStateAi:
+		case drawState:
+			switchToBetMode();
 			break;
 		case disabledPlayground:
 		default:
@@ -309,7 +326,7 @@ public class MainController {
 	 * Possible game states.
 	 */
 	private enum gameState {
-		disabledPlayground, moveState, betState, aiMoveState,
+		disabledPlayground, moveStatePlayer, betState, moveStateAi, drawState,
 	}
 
 	// Event Handlers
@@ -327,7 +344,7 @@ public class MainController {
 			getCreditLabelPlayer().setText(String.valueOf(Context.getContext().getPlayerCredits()));
 
 			// Adjust the game state.
-			setState();
+			showMessage();
 		} catch (Exception ex) {
 			// TODO: log exception
 		}
@@ -339,11 +356,8 @@ public class MainController {
 	 */
 	@FXML
 	private void onGridButtonClick(ActionEvent e) {
-		Button btn = (Button) e.getSource();
-		btn.setText("O");
-		updatePlayground();
-		updateContext();
-		setState();
+			Button btn = (Button) e.getSource();
+			btn.setText("O");
 	}
 
 	/**
@@ -402,5 +416,18 @@ public class MainController {
 	@FXML
 	private void onFinishClick() throws Exception {
 		Platform.exit();
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		for(Button btn : getTicTacToeGrid()) {
+			btn.textProperty().addListener(new ChangeListener<String>() {
+				@Override
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					updatePlayground();					
+					updateGameState();
+				}				
+			});			
+		}		
 	}
 }

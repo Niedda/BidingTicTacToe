@@ -24,10 +24,10 @@ public class StatisticController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		_easyWin.setText(String.valueOf(MongoDatabase.getDb().getEasyGamesWin()));
-		_hardWin.setText(String.valueOf(MongoDatabase.getDb().getHardGamesWin()));
-		_easyLose.setText(String.valueOf(MongoDatabase.getDb().getEasyGamesLose()));
-		_hardLose.setText(String.valueOf(MongoDatabase.getDb().getHardGamesLose()));
+		_easyWin.setText(String.valueOf(SettingHelper.getInstance().getPlayerEasyWin()));
+		_hardWin.setText(String.valueOf(SettingHelper.getInstance().getPlayerHardWin()));
+		_easyLose.setText(String.valueOf(SettingHelper.getInstance().getPlayerEasyLose()));
+		_hardLose.setText(String.valueOf(SettingHelper.getInstance().getPlayerHardLose()));
 		_title.setText(String.format("Statistik für %s", SettingHelper.getInstance().loadPlayerName()));
 	}	
 }
