@@ -143,19 +143,21 @@ public class GameLine {
 	 * @return A list of {@link GameLine}.
 	 */
 	public static ArrayList<GameLine> getPossibleGameLines() {
-	    // You can calculate those. There are 2 unit vectors (0,1) and (1,0), which you can also combine into (1,1) and (-1,1), which cover all the possibilities if the length of the vector must be 3 (|a->| == 3)
-	    // It results in the 
 		GameField[][] playground = Context.getContext().getPlayground();
 		ArrayList<GameLine> lines = new ArrayList<>();
+		//top left - bottom right
 		lines.add(new GameLine(
 				new GameField(0, 0, playground[0][0].getValue()),
 				new GameField(1, 1, playground[1][1].getValue()),
 				new GameField(2, 2, playground[2][2].getValue())));
+		
+		//top right - bottom left
 		lines.add(new GameLine(
-				new GameField(0, 2, playground[0][2].getValue()),
+				new GameField(2, 0, playground[2][0].getValue()),
 				new GameField(1, 1, playground[1][1].getValue()),
-				new GameField(2, 0, playground[2][0].getValue())));
+				new GameField(0, 2, playground[0][2].getValue())));
 
+		//vertical from left to right
 		lines.add(new GameLine(
 				new GameField(0, 0, playground[0][0].getValue()),
 				new GameField(0, 1, playground[0][1].getValue()),
@@ -169,6 +171,7 @@ public class GameLine {
 				new GameField(2, 1, playground[2][1].getValue()),
 				new GameField(2, 2, playground[2][2].getValue())));
 
+		//horizontal from top to bottom
 		lines.add(new GameLine(
 				new GameField(0, 0, playground[0][0].getValue()),
 				new GameField(1, 0, playground[1][0].getValue()),

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
-<anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://at.bestsolution.efxclipse.tooling.jdt/1.0" buildDirectory="${project}/build">
+<anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://at.bestsolution.efxclipse.tooling.jdt/1.0" buildDirectory="C:\Users\Fabrizio\Desktop\test">
   <deploy>
-    <application name="BidingTicTacToe" mainclass="nif.tictactoe.MainEntryPoint" version="0.9"/>
+    <application name="Bidding Tic Tac Toe" mainclass="nif.tictactoe.MainEntryPoint" version="1" toolkit="fx"/>
     <info vendor="Fabrizio Niedda"/>
   </deploy>
   <signjar/>

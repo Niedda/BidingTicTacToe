@@ -32,7 +32,6 @@ import javafx.util.Duration;
  */
 public class MainController implements Initializable {
 
-	// Graphical User Interface elements
 	@FXML
 	private Button _betButton;
 	@FXML
@@ -66,14 +65,12 @@ public class MainController implements Initializable {
 	@FXML
 	private MenuItem _newHardGameMenuItem;
 
-	// Private Fields
 	private Button[] _ticTacToeGrid;
 
 	private FadeTransition fadeIn = new FadeTransition(Duration.millis(700));
 
 	private gameState currentState = gameState.disabledPlayground;
 
-	// Private Getters
 	private Button getBetButton() {
 		return _betButton;
 	}
@@ -96,12 +93,12 @@ public class MainController implements Initializable {
 
 	private Button[] getTicTacToeGrid() {
 		if (_ticTacToeGrid == null) {
-			_ticTacToeGrid = new Button[] { _field00, _field01, _field02, _field10, _field11, _field12, _field20, _field21, _field22, };
+			_ticTacToeGrid = new Button[] { _field00, _field01, _field02,
+					_field10, _field11, _field12, _field20, _field21, _field22, };
 		}
 		return _ticTacToeGrid;
 	}
 
-	// Private Methods
 	/**
 	 * Initialize the fade effect for displaying the info-label.
 	 */
@@ -172,7 +169,8 @@ public class MainController implements Initializable {
 			getBetSlider().setDisable(false);
 			getBetSlider().setMin(1);
 		}
-		getBetSlider().setMax(Double.parseDouble(getCreditLabelPlayer().getText()));
+		getBetSlider().setMax(
+				Double.parseDouble(getCreditLabelPlayer().getText()));
 		currentState = gameState.betState;
 	}
 
@@ -217,7 +215,7 @@ public class MainController implements Initializable {
 	}
 
 	/**
-	 * Show an Info Message as splash screen which disappears after 1.5 seconds.
+	 * Show an Info Message as splash screen which disappears after 0.6 seconds.
 	 */
 	private void showInfoMsg(String message) {
 		_infoLabel.setText(message);
@@ -261,14 +259,11 @@ public class MainController implements Initializable {
 				return;
 			} else if (Context.getContext().isAiWinner()) {
 				showInfoMsg("Computer hat das Spiel gewonnen.");
-        		try
-                {
-                  setAiMove(Context.getContext().getBrain().getNextMove());
-                }
-                catch (InvalidActivityException exception)
-                {
-                  Context.getContext().handleException(exception);
-                }
+				try {
+					setAiMove(Context.getContext().getBrain().getNextMove());
+				} catch (InvalidActivityException exception) {
+					Context.getContext().handleException(exception);
+				}
 				currentState = gameState.moveStateAi;
 			} else if (Context.getContext().isPlayerWinner()) {
 				showInfoMsg("Player hat das Spiel gewonnen.");
@@ -338,7 +333,6 @@ public class MainController implements Initializable {
 		disabledPlayground, moveStatePlayer, betState, moveStateAi, drawState,
 	}
 
-	// Event Handlers
 	/**
 	 * Handles the Click-Event fired by the bet-button.
 	 */
@@ -394,7 +388,7 @@ public class MainController implements Initializable {
 	 */
 	@FXML
 	private void onSettingsClick() {
-		MainEntryPoint.showSimpleDialog(getClass().getResource("../views/SettingsView.fxml"));
+		FxmlHelper.getInstance().showModalDialog("SettingsView.fxml", "Einstellungen");
 	}
 
 	/**
@@ -404,7 +398,7 @@ public class MainController implements Initializable {
 	 */
 	@FXML
 	private void onAboutClick() {
-		MainEntryPoint.showModalDialog(getClass().getResource("../views/AboutView.fxml"));
+		FxmlHelper.getInstance().showModalDialog("AboutView.fxml", "Über das Spiel");
 	}
 
 	/**
@@ -412,7 +406,7 @@ public class MainController implements Initializable {
 	 */
 	@FXML
 	private void onStatisticClick() {
-		MainEntryPoint.showModalDialog(getClass().getResource("../views/StatisticView.fxml"));
+		FxmlHelper.getInstance().showModalDialog("StatisticView.fxml", "Statistik");
 	}
 
 	/**
@@ -426,14 +420,15 @@ public class MainController implements Initializable {
 	@FXML
 	private void onExceptionClick() {
 		try {
-			throw new Exception("hahaha");
-		} catch (Exception ex) {
+			String nan = "nan";
+			Integer.parseInt(nan);
+		} catch (NumberFormatException ex) {
 			Context.getContext().handleException(ex);
 		}
 	}
-
+		
 	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
+	public void initialize(URL arg0, ResourceBundle arg1) {	
 		for (Button btn : getTicTacToeGrid()) {
 			btn.textProperty().addListener(new ChangeListener<String>() {
 				@Override
