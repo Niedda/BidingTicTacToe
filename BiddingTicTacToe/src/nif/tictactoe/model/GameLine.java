@@ -61,7 +61,7 @@ public class GameLine {
 	 * @return boolean
 	 */
 	public boolean contains(GameField field) {
-		return field.getXPosition() == _field1.getXPosition()
+		return field.getXPosition() == _field1.getXPosition() 
 				&& field.getYPosition() == _field1.getYPosition()
 				|| field.getXPosition() == _field2.getXPosition()
 				&& field.getYPosition() == _field2.getYPosition()
@@ -99,8 +99,11 @@ public class GameLine {
 		if (obj.getClass().equals(GameLine.class)) {
 			GameLine comp = (GameLine) obj;
 			if (comp.getField1().getXPosition() == getField1().getXPosition()
+					&& comp.getField1().getYPosition() == getField1().getYPosition()
 					&& comp.getField2().getXPosition() == getField2().getXPosition()
-					&& comp.getField3().getXPosition() == getField3().getXPosition()) {
+					&& comp.getField2().getYPosition() == getField2().getYPosition()
+					&& comp.getField3().getXPosition() == getField3().getXPosition()
+					&& comp.getField3().getYPosition() == getField3().getYPosition()) {
 				return true;
 			}
 		}
@@ -187,8 +190,7 @@ public class GameLine {
 		return lines;
 	}
 
-	public static ArrayList<GameLine> removeLine(ArrayList<GameLine> input,
-			GameLine toRemove) {
+	public static ArrayList<GameLine> removeLine(ArrayList<GameLine> input, GameLine toRemove) {
 		for (GameLine line : input) {
 			if (line.equals(toRemove)) {
 				input.remove(line);
