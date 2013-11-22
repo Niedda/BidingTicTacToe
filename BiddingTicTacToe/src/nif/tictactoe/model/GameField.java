@@ -56,9 +56,8 @@ public class GameField {
 	public boolean equals(Object obj) {
 		if (obj.getClass().equals(GameField.class)) {
 			GameField comp = (GameField) obj;
-			return (comp.getValue().equals(getValue())
-					&& comp.getXPosition() == getXPosition() && comp
-						.getYPosition() == getYPosition());
+			return (comp.getXPosition() == getXPosition() 
+					&& comp.getYPosition() == getYPosition());
 		}
 		return false;
 	}

@@ -17,7 +17,7 @@ public class SettingHelper {
 	// Private
 	private final String _propertyNamePlayer = "pname";
 
-	private final String _filename = "TicTacToe_Properties.xml";
+	private final String _filename = "TicTacToe_Properties.config";
 
 	private final String _defaultName = "Player1";
 
@@ -46,6 +46,7 @@ public class SettingHelper {
 	private void saveStatistic(String propName, int value) {
 		try {
 			Properties props = new Properties();
+			props.load(new FileInputStream(getPropertyFile()));
 			props.setProperty(propName, String.valueOf(value));
 			File f = getPropertyFile();
 			OutputStream out = new FileOutputStream(f);
@@ -73,6 +74,7 @@ public class SettingHelper {
 	public void savePlayerName(String name) {
 		try {
 			Properties props = new Properties();
+			props.load(new FileInputStream(getPropertyFile()));
 			props.setProperty(_propertyNamePlayer, name);
 			File f = getPropertyFile();
 			OutputStream out = new FileOutputStream(f);
@@ -87,39 +89,42 @@ public class SettingHelper {
 			Properties props = new Properties();
 			InputStream is = null;
 			File f = getPropertyFile();
-
 			is = new FileInputStream(f);
 			props.load(is);
 			String name = (String) props.getProperty(_propertyNamePlayer, _defaultName);
 			return name;
 		} catch (Exception ex) {
 			Context.getContext().handleException(ex);
-			return "";
+			return _defaultName;
 		}
 	}
 
 	public void addPlayerHardWin() {
-		int counter =  loadStatistic(loadPlayerName().concat(_hardWin));
+		String pName = loadPlayerName();
+		int counter =  loadStatistic(pName.concat(_hardWin));
 		counter++;
-		saveStatistic(_propertyNamePlayer + _hardWin, counter);
+		saveStatistic(pName.concat(_hardWin), counter);
 	}
 	
 	public void addPlayerEasyWin() {
-		int counter =  loadStatistic(loadPlayerName().concat(_easyWin));
+		String pName = loadPlayerName();
+		int counter =  loadStatistic(pName.concat(_easyWin));
 		counter++;
-		saveStatistic(_propertyNamePlayer + _easyWin, counter);
+		saveStatistic(pName.concat(_easyWin), counter);
 	}
 	
 	public void addPlayerHardLose() {
-		int counter =  loadStatistic(loadPlayerName().concat(_hardLose));
+		String pName = loadPlayerName();
+		int counter =  loadStatistic(pName.concat(_hardLose));
 		counter++;
-		saveStatistic(_propertyNamePlayer + _hardLose, counter);
+		saveStatistic(pName.concat(_hardLose), counter);
 	}
 	
 	public void addPlayerEasyLose() {
-		int counter =  loadStatistic(loadPlayerName().concat(_easyLose));
+		String pName = loadPlayerName();
+		int counter =  loadStatistic(pName.concat(_easyLose));
 		counter++;
-		saveStatistic(_propertyNamePlayer + _easyLose, counter);
+		saveStatistic(pName.concat(_easyLose), counter);
 	}
 
 	public int getPlayerHardWin() {

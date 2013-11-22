@@ -15,9 +15,19 @@ import nif.tictactoe.Context;
  */
 public class HardBrain extends BrainBase {
 
+	public HardBrain() {
+		_strategy = new Random().nextInt(2);
+	}
+
 	@Override
 	public int getNextBid() {
-		return getMixedStrategyBet();
+		if (_strategy == 0) {
+			return getAggressiveBet();
+		} else if (_strategy == 1) {
+			return getMixedStrategyBet();
+		} else {
+			return getMixedStrategyBet();
+		}
 	}
 
 	@Override
@@ -39,7 +49,7 @@ public class HardBrain extends BrainBase {
 					oldMoves = moves;
 				}
 			}
-			
+
 			for (GameField field : bestLine.getGameFields()) {
 				if (field.getValue().equals("")) {
 					return field;
@@ -78,7 +88,7 @@ public class HardBrain extends BrainBase {
 	}
 
 	private int getMixedStrategyBet() {
-		int score = 0;
+		int score = 1;
 		int fieldsToWinPlayer = getFieldsToWinPlayer();
 		int fieldsToWinAi = getFieldsToWinAi();
 		Context context = Context.getContext();
@@ -89,82 +99,76 @@ public class HardBrain extends BrainBase {
 
 		// Calculate the score value
 		if (fieldsToWinPlayer == 1) {
-			score += 9;
-		} else if (fieldsToWinPlayer == 2) {
 			score += 2;
+		} else if (fieldsToWinPlayer == 2) {
+			score += 1;
 		}
 
 		int aiCredits = context.getAiCredits();
 		int playerCredits = context.getPlayerCredits();
 
 		if (fieldsToWinAi == 1) {
-			return aiCredits;
-		} else if (fieldsToWinAi == 2) {
 			score += 2;
+		} else if (fieldsToWinAi == 2) {
+			score += 1;
 		}
 
 		if (aiCredits < playerCredits) {
-			score += 2;
+			score += 1;
 		} else if (aiCredits > playerCredits) {
-			score += 4;
+			score += 1;
 		}
+
 		Random rnd = new Random();
+		int maxBet = (int) Math.round(aiCredits / 5d * score);
+		int minBet = 1;
+		minBet += (int) Math.round(aiCredits / 5d * (score - 1));
+		maxBet = rnd.nextInt(maxBet);
 
-		// Set the bet depending on the score value
-		if (score <= 4) {
-			// Make a low bet
-			int maxBet = (int) Math.round(aiCredits / 3d);
-			if (maxBet > playerCredits + 1) {
-				maxBet = playerCredits + 1;
-			}
-			int bet = rnd.nextInt(maxBet) + 1;
-			if (bet > aiCredits) {
-				return aiCredits;
-			}
-			return bet;
-		}
-
-		if (score <= 8) {
-			// Make a medium bet
-			int maxBet = (int) Math.round((aiCredits / 3d) * 2d);
-			int minBet = (int) Math.round(aiCredits / 3d);
-			if (maxBet > playerCredits + 1) {
-				maxBet = playerCredits + 1;
-			}
-			int bet = rnd.nextInt(maxBet) + 1;
-
-			while (bet < minBet) {
-				if (minBet > maxBet) {
-					minBet = maxBet;
+		if (minBet > maxBet) {
+			while (minBet < maxBet) {
+				if (maxBet == 0) {
+					maxBet += 2;
 				}
-				bet = rnd.nextInt(maxBet) + 1;
+				maxBet = rnd.nextInt(maxBet);
 			}
-			if (bet > aiCredits) {
-				return aiCredits;
-			}
-
-			return bet;
 		}
 
-		// Make a high bet
-		int maxBet = aiCredits;
-		int minBet = (int) Math.round((aiCredits / 3d) * 2d);
-		if (maxBet > playerCredits + 1) {
-			maxBet = playerCredits + 1;
-		}
-		int bet = rnd.nextInt(maxBet) + 1;
-
-		while (bet < minBet) {
-			if (minBet > maxBet) {
-				minBet = maxBet;
-			}
-			bet = rnd.nextInt(maxBet) + 1;
-		}
-		if (bet > aiCredits) {
+		if (maxBet > aiCredits) {
 			return aiCredits;
 		}
 
-		return bet;
+		if (maxBet > playerCredits) {
+			return playerCredits + 1;
+		}
+
+		return maxBet;
 	}
 
+	private int getAggressiveBet() {
+		Context context = Context.getContext();
+		int aiCredits = context.getAiCredits();
+		int playerCredits = context.getPlayerCredits();
+		_move++;
+
+		if (_move % 2 == 1) {
+			return 1;
+		} else if (getFieldsToWinAi() == 1) {
+			return aiCredits;
+		}
+
+		if (4 > aiCredits) {
+			return aiCredits;
+		}
+
+		if (4 > playerCredits) {
+			return playerCredits + 1;
+		}
+
+		return 4;
+	}
+
+	private int _move;
+
+	private int _strategy;
 }
