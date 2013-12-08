@@ -15,8 +15,8 @@ public abstract class BrainBase {
 
 	// Privates
 	private int _fieldsToWinAi;
-
 	private int _fieldsToWinPlayer;
+	protected IStrategy _strategy;
 
 	// Setters
 	private void setFieldsToWinAi(int fields) {
@@ -36,9 +36,17 @@ public abstract class BrainBase {
 		return _fieldsToWinPlayer;
 	}
 
+	/**
+	 * Update the brain and calculate the new values.
+	 */
+	private final void UpdateBrain() {
+		getMovesToWin();
+	}
+
 	// Public
 	/**
 	 * Get the list of {@link GameField} which are owned by the computer.
+	 * 
 	 * @return {@link GameField}
 	 */
 	protected final ArrayList<GameField> getAiFields() {
@@ -47,8 +55,7 @@ public abstract class BrainBase {
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				if (pg[i][j].getValue() != null
-						&& pg[i][j].getValue().equals("X")) {
+				if (pg[i][j].getValue() != null && pg[i][j].getValue().equals("X")) {
 					aiFields.add(pg[i][j]);
 				}
 			}
@@ -58,6 +65,7 @@ public abstract class BrainBase {
 
 	/**
 	 * Get the list of {@link GameField} which are owned by the player.
+	 * 
 	 * @return {@link GameField}
 	 */
 	protected final ArrayList<GameField> getPlayerFields() {
@@ -66,8 +74,7 @@ public abstract class BrainBase {
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				if (pg[i][j].getValue() != null
-						&& pg[i][j].getValue().equals("O")) {
+				if (pg[i][j].getValue() != null && pg[i][j].getValue().equals("O")) {
 					playerFields.add(pg[i][j]);
 				}
 			}
@@ -76,9 +83,8 @@ public abstract class BrainBase {
 	}
 
 	/**
-	 * Get the moves to win for the computer and the player.
-	 * The updated values can get by the methods 
-	 * <b>getFieldsToWinAi</b></br>
+	 * Get the moves to win for the computer and the player. The updated values
+	 * can get by the methods <b>getFieldsToWinAi</b></br>
 	 * <b>getFieldsToWinPlayer</b>
 	 */
 	protected final void getMovesToWin() {
@@ -121,20 +127,110 @@ public abstract class BrainBase {
 
 	/**
 	 * Calculate the next move from the computer.
+	 * 
 	 * @throws InvalidActivityException
 	 */
-	public abstract GameField getNextMove() throws InvalidActivityException;
+	public GameField getNextMove() throws InvalidActivityException {
+		ArrayList<GameField> aiFields = getAiFields();
+		ArrayList<GameField> plFields = getPlayerFields();
+		GameField[][] gameFields = Context.getContext().getPlayground();
+		ArrayList<GameLine> freeLines = GameLine.getFreeLines(plFields);
+		ArrayList<GameLine> freeLinesPlayer = GameLine.getFreeLines(aiFields);
+
+		if (getFieldsToWinPlayer() == 1 && getFieldsToWinAi() != 1) {
+			GameLine bestLine = freeLinesPlayer.get(0);
+			int oldMoves = 4;
+			for (GameLine line : freeLinesPlayer) {
+				int moves = line.getMovesNeeded(plFields);
+
+				if (moves < oldMoves) {
+					bestLine = line;
+					oldMoves = moves;
+				}
+			}
+
+			for (GameField field : bestLine.getGameFields()) {
+				if (field.getValue().equals("")) {
+					return field;
+				}
+			}
+		}
+
+		if (gameFields[1][1].getValue().equals("")) {
+			// Take the middle field if available
+			return gameFields[1][1];
+		}
+
+		if (freeLines.size() == 0) {
+			// There's something wrong.
+			throw new UnsupportedOperationException("There are no fields available for the next move.");
+		}
+
+		GameLine bestLine = freeLines.get(0);
+		int oldMoves = 4;
+		for (GameLine line : freeLines) {
+			int moves = line.getMovesNeeded(aiFields);
+
+			if (moves < oldMoves) {
+				bestLine = line;
+				oldMoves = moves;
+			}
+		}
+
+		if (bestLine.getField2().getValue().equals("")) {
+			return bestLine.getField2();
+		} else if (bestLine.getField1().getValue().equals("")) {
+			return bestLine.getField1();
+		} else {
+			return bestLine.getField3();
+		}
+	}
 
 	/**
-	 * Calculate the next bid from the computer.
-	 * @return integer
+	 * Calculate the next bid for the computer.
 	 */
-	public abstract int getNextBid();
+	public int getNextBid() {
+		UpdateBrain();
+		return getNextValidBid(_strategy.getNextBet(getFieldsToWinPlayer(), getFieldsToWinAi()));
+	}
 
 	/**
-	 * Update the brain and calculate the new values.
+	 * Validate the bid against some simple rules.
 	 */
-	public final void UpdateBrain() {
-		getMovesToWin();
+	private int getNextValidBid(int calculatedBid) {
+		int aiCredits = Context.getContext().getAiCredits();
+		int playerCredits = Context.getContext().getPlayerCredits();
+
+		if (calculatedBid > aiCredits) {
+			return aiCredits;
+		}
+
+		if (calculatedBid > playerCredits) {
+			return playerCredits + 1;
+		}
+
+		return calculatedBid;
+	}
+
+	/**
+	 * Save the strategy if needed.
+	 */
+	public void saveAiWin() {
+		if (_strategy.getClass() == ImmitatorBidStrategy.class) {
+			ImmitatorBidStrategy strat = (ImmitatorBidStrategy) _strategy;
+			strat.addWin();
+			SettingHelper.getInstance().saveBidStrategy(strat);
+		}
+	}
+
+	/**
+	 * Save the strategy if needed.
+	 */
+	public void saveAiLose() {
+		if (_strategy.getClass() == ImmitatorBidStrategy.class) {
+			ImmitatorBidStrategy strat = (ImmitatorBidStrategy) _strategy;
+			strat.addLose();
+			SettingHelper.getInstance().saveBidStrategy(strat);
+		}
 	}
 }

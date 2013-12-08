@@ -88,8 +88,7 @@ public class Context {
 	}
 
 	public void setPlayground(GameField[][] playground) {
-		_playground = playground;
-		_brain.UpdateBrain();
+		_playground = playground;		
 	}
 			
 	public void handleException(Exception ex) {

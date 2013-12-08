@@ -3,13 +3,14 @@ package nif.tictactoe.controllers;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 import javax.activity.InvalidActivityException;
 
 import nif.tictactoe.*;
 import nif.tictactoe.model.*;
-
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -66,6 +67,7 @@ public class MainController implements Initializable {
 	private MenuItem _newHardGameMenuItem;
 
 	private Button[] _ticTacToeGrid;
+	private ArrayList<Integer> _cachedBids;
 
 	private FadeTransition fadeIn = new FadeTransition(Duration.millis(700));
 
@@ -93,10 +95,13 @@ public class MainController implements Initializable {
 
 	private Button[] getTicTacToeGrid() {
 		if (_ticTacToeGrid == null) {
-			_ticTacToeGrid = new Button[] { _field00, _field01, _field02,
-					_field10, _field11, _field12, _field20, _field21, _field22, };
+			_ticTacToeGrid = new Button[] { _field00, _field01, _field02, _field10, _field11, _field12, _field20, _field21, _field22, };
 		}
 		return _ticTacToeGrid;
+	}
+	
+	private boolean isHardGame() {
+		return Context.getContext().getBrain().getClass() == HardBrain.class;
 	}
 
 	/**
@@ -169,8 +174,7 @@ public class MainController implements Initializable {
 			getBetSlider().setDisable(false);
 			getBetSlider().setMin(1);
 		}
-		getBetSlider().setMax(
-				Double.parseDouble(getCreditLabelPlayer().getText()));
+		getBetSlider().setMax(Double.parseDouble(getCreditLabelPlayer().getText()));
 		currentState = gameState.betState;
 	}
 
@@ -289,6 +293,14 @@ public class MainController implements Initializable {
 			if (Context.getContext().getBrain().getClass() == EasyBrain.class) {
 				SettingHelper.getInstance().addPlayerEasyWin();
 			} else {
+				int[] _bids = new int[_cachedBids.size()];
+				
+				for(int i = 0; i < _cachedBids.size(); i++) {
+					_bids[i] = _cachedBids.get(i).intValue();
+				}
+				
+				SettingHelper.getInstance().saveBidStrategy(new ImmitatorBidStrategy(_bids, 0, 0, UUID.randomUUID()));
+				Context.getContext().getBrain().saveAiLose();
 				SettingHelper.getInstance().addPlayerHardWin();
 			}
 			return;
@@ -300,6 +312,7 @@ public class MainController implements Initializable {
 			if (Context.getContext().getBrain().getClass() == EasyBrain.class) {
 				SettingHelper.getInstance().addPlayerEasyLose();
 			} else {
+				Context.getContext().getBrain().saveAiWin();				
 				SettingHelper.getInstance().addPlayerHardLose();
 			}
 			return;
@@ -341,6 +354,10 @@ public class MainController implements Initializable {
 		updatePlayground();
 		updateContext();
 
+		if(isHardGame()) {
+			_cachedBids.add(Context.getContext().getPlayerBid());
+		}
+		
 		// Update the GUI with the new values.
 		getCreditLabelAi().setText(String.valueOf(Context.getContext().getAiCredits()));
 		getCreditLabelPlayer().setText(String.valueOf(Context.getContext().getPlayerCredits()));
@@ -375,6 +392,7 @@ public class MainController implements Initializable {
 	 */
 	@FXML
 	private void onNewHardGameClick() {
+		_cachedBids = new ArrayList<Integer>();
 		initializeFade();
 		Context.getContext().setBrain(new HardBrain());
 		Context.getContext().resetContext();
@@ -426,9 +444,9 @@ public class MainController implements Initializable {
 			Context.getContext().handleException(ex);
 		}
 	}
-		
+
 	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {	
+	public void initialize(URL arg0, ResourceBundle arg1) {
 		for (Button btn : getTicTacToeGrid()) {
 			btn.textProperty().addListener(new ChangeListener<String>() {
 				@Override
