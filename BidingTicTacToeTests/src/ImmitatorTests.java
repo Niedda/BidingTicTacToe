@@ -42,6 +42,10 @@ public class ImmitatorTests {
 	
 	@Test
 	public void checkForObsoleteStrategy() {
-		
+		_bidStrategy.addLose();
+		_bidStrategy.addWin();
+		ImmitatorScheduler.getInstance().saveNewBidStrategyIfPossible(_bidStrategy);
+		boolean exist = SettingHelper.getInstance().existBidStrategy(_bidStrategy.getSaveNumber());
+		assertTrue(exist);
 	}
 }

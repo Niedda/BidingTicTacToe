@@ -200,12 +200,19 @@ public abstract class BrainBase {
 	private int getNextValidBid(int calculatedBid) {
 		int aiCredits = Context.getContext().getAiCredits();
 		int playerCredits = Context.getContext().getPlayerCredits();
-
+		
+		if(getFieldsToWinAi() == 1) {
+			return aiCredits;
+		}
+		
 		if (calculatedBid > aiCredits) {
 			return aiCredits;
 		}
 
-		if (calculatedBid > playerCredits) {
+		if (calculatedBid > playerCredits || getFieldsToWinPlayer() == 1) {
+			if(calculatedBid > aiCredits) {
+				return aiCredits;
+			}
 			return playerCredits + 1;
 		}
 

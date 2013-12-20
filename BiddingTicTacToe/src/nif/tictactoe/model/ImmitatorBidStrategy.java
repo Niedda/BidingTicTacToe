@@ -9,7 +9,7 @@ public class ImmitatorBidStrategy implements Serializable, Comparable<ImmitatorB
 
 	private int[] _bides;
 
-	private int _itterator;
+	private transient int _itterator;
 
 	private int _wins;
 
@@ -17,7 +17,7 @@ public class ImmitatorBidStrategy implements Serializable, Comparable<ImmitatorB
 
 	private String _saveNumber;
 
-	private IStrategy _fallbackStrategy;
+	private transient IStrategy _fallbackStrategy;
 
 	public ImmitatorBidStrategy(int[] bides, int wins, int loses, UUID saveNumber) {
 		_bides = bides;
@@ -64,6 +64,9 @@ public class ImmitatorBidStrategy implements Serializable, Comparable<ImmitatorB
 	}
 
 	public double getWinLoseProportion() {
+		if(_loses == 0) {
+			return 1;
+		}
 		return _wins / _loses;
 	}
 

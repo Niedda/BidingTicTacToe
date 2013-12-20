@@ -150,7 +150,9 @@ public class Context {
 	
 	public void resetContext() {
 		setAiCredits(8);
-		setPlayerCredits(8);		
+		setPlayerCredits(8);	
+		_aiBid = 0;
+		_plBid = 0;
 	}
 		
 	//Statics

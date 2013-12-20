@@ -99,7 +99,7 @@ public class MainController implements Initializable {
 		}
 		return _ticTacToeGrid;
 	}
-	
+
 	private boolean isHardGame() {
 		return Context.getContext().getBrain().getClass() == HardBrain.class;
 	}
@@ -246,7 +246,10 @@ public class MainController implements Initializable {
 			public void handle(ActionEvent event) {
 				_infoLabel.setText("");
 				_infoLabel.setVisible(false);
-				updateGameState();
+
+				if (currentState != gameState.disabledPlayground) {
+					updateGameState();
+				}
 			}
 		};
 	}
@@ -294,12 +297,12 @@ public class MainController implements Initializable {
 				SettingHelper.getInstance().addPlayerEasyWin();
 			} else {
 				int[] _bids = new int[_cachedBids.size()];
-				
-				for(int i = 0; i < _cachedBids.size(); i++) {
+
+				for (int i = 0; i < _cachedBids.size(); i++) {
 					_bids[i] = _cachedBids.get(i).intValue();
 				}
-				
-				SettingHelper.getInstance().saveBidStrategy(new ImmitatorBidStrategy(_bids, 0, 0, UUID.randomUUID()));
+
+				ImmitatorScheduler.getInstance().saveNewBidStrategyIfPossible(new ImmitatorBidStrategy(_bids, 0, 0, UUID.randomUUID()));
 				Context.getContext().getBrain().saveAiLose();
 				SettingHelper.getInstance().addPlayerHardWin();
 			}
@@ -312,7 +315,7 @@ public class MainController implements Initializable {
 			if (Context.getContext().getBrain().getClass() == EasyBrain.class) {
 				SettingHelper.getInstance().addPlayerEasyLose();
 			} else {
-				Context.getContext().getBrain().saveAiWin();				
+				Context.getContext().getBrain().saveAiWin();
 				SettingHelper.getInstance().addPlayerHardLose();
 			}
 			return;
@@ -354,10 +357,10 @@ public class MainController implements Initializable {
 		updatePlayground();
 		updateContext();
 
-		if(isHardGame()) {
+		if (isHardGame()) {
 			_cachedBids.add(Context.getContext().getPlayerBid());
 		}
-		
+
 		// Update the GUI with the new values.
 		getCreditLabelAi().setText(String.valueOf(Context.getContext().getAiCredits()));
 		getCreditLabelPlayer().setText(String.valueOf(Context.getContext().getPlayerCredits()));

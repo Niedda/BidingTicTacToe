@@ -12,17 +12,21 @@ import nif.tictactoe.BrainBase;
 public class HardBrain extends BrainBase {
 
 	public HardBrain() {
-		if(ImmitatorScheduler.getInstance().hasStrategies()) {
+		int random = new Random().nextInt(ImmitatorScheduler.getInstance().hasStrategies() ? 4 : 3);
+
+		switch (random) {
+		case 0:
+			_strategy = new PokerBettingStrategy();
+			break;
+		case 1:
+			_strategy = new ModerateBettingStrategy();
+			break;
+		case 2:
+			_strategy = new AggressiveBettingStrategy();
+			break;
+		case 3:
 			_strategy = ImmitatorScheduler.getInstance().getImmitatorBidStrategy();
-		} else {
-			int rnd = new Random().nextInt(2);
-			
-			if(rnd == 0) {
-				_strategy = new ModerateBettingStrategy();	
-			} else {
-				_strategy = new AggressiveBettingStrategy();
-			}
+			break;
 		}
-		
-	}	
+	}
 }

@@ -173,6 +173,11 @@ public class SettingHelper implements Serializable {
 		}
 	}
 
+	public boolean existBidStrategy(String saveNumber) {
+		File f = new File(getCurrentFilePath().concat(_strategy.concat(String.valueOf(saveNumber).concat(".strategy"))));
+		return f.exists();
+	}
+	
 	public IStrategy loadBidStrategy(String saveNumber) {
 		try {
 			FileInputStream fileInputStream = new FileInputStream(getCurrentFilePath().concat(_strategy.concat(String.valueOf(saveNumber).concat(".strategy"))));

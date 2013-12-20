@@ -28,14 +28,20 @@ public class ImmitatorScheduler {
 			return;
 		}
 		
+		if(helper.existBidStrategy(newBidStrat.getSaveNumber())) {
+			helper.deleteBidStrategy(newBidStrat.getSaveNumber());
+			helper.saveBidStrategy(newBidStrat);
+			return;
+		}
+		
 		ImmitatorBidStrategy bidStrat = getObsoleteStrategy();
 		
 		if(bidStrat == null) {
 			return;
 		}
 		
-		helper.saveBidStrategy(newBidStrat);
 		helper.deleteBidStrategy(bidStrat.getSaveNumber());
+		helper.saveBidStrategy(newBidStrat);		
 	}
 	
 	public ImmitatorBidStrategy getImmitatorBidStrategy() {
