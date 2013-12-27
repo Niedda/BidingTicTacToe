@@ -1,6 +1,5 @@
 package nif.tictactoe.controllers;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
@@ -65,14 +64,14 @@ public class MainController implements Initializable {
 	private MenuItem _newEasyGameMenuItem;
 	@FXML
 	private MenuItem _newHardGameMenuItem;
-
+	
 	private Button[] _ticTacToeGrid;
 	private ArrayList<Integer> _cachedBids;
-
 	private FadeTransition fadeIn = new FadeTransition(Duration.millis(700));
-
 	private gameState currentState = gameState.disabledPlayground;
-
+	private enum gameState {
+		disabledPlayground, moveStatePlayer, betState, moveStateAi, drawState,
+	}
 	private Button getBetButton() {
 		return _betButton;
 	}
@@ -104,9 +103,6 @@ public class MainController implements Initializable {
 		return Context.getContext().getBrain().getClass() == HardBrain.class;
 	}
 
-	/**
-	 * Initialize the fade effect for displaying the info-label.
-	 */
 	private void initializeFade() {
 		fadeIn.setNode(_infoLabel);
 		fadeIn.setFromValue(0.6);
@@ -115,9 +111,6 @@ public class MainController implements Initializable {
 		fadeIn.setAutoReverse(false);
 	}
 
-	/**
-	 * Update the context with the current playground state.
-	 */
 	private void updatePlayground() {
 		GameField[][] playground = new GameField[3][3];
 		playground[0][0] = new GameField(0, 0, _field00.getText());
@@ -132,18 +125,12 @@ public class MainController implements Initializable {
 		Context.getContext().setPlayground(playground);
 	}
 
-	/**
-	 * Update the context with the bets and calculate the new balance.
-	 */
 	private void updateContext() {
 		Context.getContext().setAiBid(Context.getContext().getBrain().getNextBid());
 		Context.getContext().setPlayerBid((int) getBetSlider().getValue());
 		Context.getContext().setBalance();
 	}
 
-	/**
-	 * Maps the computer move to the graphical user interface.
-	 */
 	private void setAiMove(GameField field) {
 		try {
 			String refField = String.format("_field%s%s", field.getXPosition(), field.getYPosition());
@@ -157,9 +144,6 @@ public class MainController implements Initializable {
 		}
 	}
 
-	/**
-	 * Switch to the bet mode and disable the grid.
-	 */
 	private void switchToBetMode() {
 		for (Button btn : getTicTacToeGrid()) {
 			btn.setDisable(true);
@@ -178,9 +162,6 @@ public class MainController implements Initializable {
 		currentState = gameState.betState;
 	}
 
-	/**
-	 * Switch to the move mode and enable the grid.
-	 */
 	private void switchToMoveMode() {
 		for (Button btn : getTicTacToeGrid()) {
 			if (btn.getText().equals("")) {
@@ -192,9 +173,6 @@ public class MainController implements Initializable {
 		currentState = gameState.moveStatePlayer;
 	}
 
-	/**
-	 * Switch to the game-end-mode. The GUI-play-elements are getting disabled.
-	 */
 	private void switchToDisabledMode() {
 		for (Button btn : getTicTacToeGrid()) {
 			btn.setDisable(true);
@@ -203,9 +181,6 @@ public class MainController implements Initializable {
 		getBetSlider().setDisable(true);
 	}
 
-	/**
-	 * Resets the playground to the default values.
-	 */
 	private void resetPlayground() {
 		for (Button button : getTicTacToeGrid()) {
 			button.setText("");
@@ -218,9 +193,6 @@ public class MainController implements Initializable {
 		currentState = gameState.betState;
 	}
 
-	/**
-	 * Show an Info Message as splash screen which disappears after 0.6 seconds.
-	 */
 	private void showInfoMsg(String message) {
 		_infoLabel.setText(message);
 		_infoLabel.setVisible(true);
@@ -236,9 +208,6 @@ public class MainController implements Initializable {
 		}
 	}
 
-	/**
-	 * Handles the fade finished event.
-	 */
 	private EventHandler<ActionEvent> onFadeFinishedEvent() {
 		return new EventHandler<ActionEvent>() {
 
@@ -254,9 +223,6 @@ public class MainController implements Initializable {
 		};
 	}
 
-	/**
-	 * Updates the current state according to the game situation.
-	 */
 	private void showMessage() {
 		switch (currentState) {
 		case betState:
@@ -281,9 +247,6 @@ public class MainController implements Initializable {
 		}
 	}
 
-	/**
-	 * Checks if the game has a winner or switch to the next state.
-	 */
 	private void updateGameState() {
 		updatePlayground();
 
@@ -343,13 +306,6 @@ public class MainController implements Initializable {
 	}
 
 	/**
-	 * Possible game states.
-	 */
-	private enum gameState {
-		disabledPlayground, moveStatePlayer, betState, moveStateAi, drawState,
-	}
-
-	/**
 	 * Handles the Click-Event fired by the bet-button.
 	 */
 	@FXML
@@ -370,8 +326,7 @@ public class MainController implements Initializable {
 	}
 
 	/**
-	 * Handles the Click-Event fired by the grid-button if a move by the player
-	 * was made.
+	 * Handles the Click-Event fired by the grid-button if a move by the player was made.
 	 */
 	@FXML
 	private void onGridButtonClick(ActionEvent e) {
@@ -403,9 +358,7 @@ public class MainController implements Initializable {
 	}
 
 	/**
-	 * Handles the Click-Event fired by the settings menu button.
-	 * 
-	 * @throws IOException
+	 * Handles the Click-Event fired by the settings menu button.	 * 
 	 */
 	@FXML
 	private void onSettingsClick() {
@@ -414,8 +367,6 @@ public class MainController implements Initializable {
 
 	/**
 	 * Handles the Click-Event fired by the about menu button.
-	 * 
-	 * @throws IOException
 	 */
 	@FXML
 	private void onAboutClick() {

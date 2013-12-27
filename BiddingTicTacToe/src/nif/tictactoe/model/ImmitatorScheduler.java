@@ -7,9 +7,17 @@ import nif.tictactoe.SettingHelper;
 public class ImmitatorScheduler {
 
 	private final int _cacheSize = 3;
-		
+	private  static ImmitatorScheduler _instance;		
+	
 	private ImmitatorScheduler() {
 		//NOP
+	}
+	
+	public static ImmitatorScheduler getInstance() {
+		if(_instance == null) {
+			_instance = new ImmitatorScheduler();
+		}		
+		return _instance;
 	}
 	
 	public boolean hasStrategies() {
@@ -67,19 +75,7 @@ public class ImmitatorScheduler {
 				if(bidStrat.getWinLoseProportion() < 1 && bidStrat.gamesPlayed() > 6) {
 					return bidStrat;
 				}						
-		}
-		
+		}		
 		return null;
 	}
-	
-	//Singleton
-	public static ImmitatorScheduler getInstance() {
-		if(_instance == null) {
-			_instance = new ImmitatorScheduler();
-		}
-		
-		return _instance;
-	}
-	
-	private  static ImmitatorScheduler _instance;		
 }

@@ -6,17 +6,11 @@ import java.util.UUID;
 public class ImmitatorBidStrategy implements Serializable, Comparable<ImmitatorBidStrategy>, IStrategy  {
 
 	private static final long serialVersionUID = -6696317599920513348L;
-
 	private int[] _bides;
-
 	private transient int _itterator;
-
 	private int _wins;
-
 	private int _loses;
-
 	private String _saveNumber;
-
 	private transient IStrategy _fallbackStrategy;
 
 	public ImmitatorBidStrategy(int[] bides, int wins, int loses, UUID saveNumber) {

@@ -6,16 +6,10 @@ package nif.tictactoe.model;
  * @description: Represents a {@link GameField} and offers some basic methods to deal with them.
  */
 public class GameField {
-
-	// Privates
 	private String _value;
-
 	private int _xPosition;
-
 	private int _yPosition;
-
 	
-	// Getters
 	public int getYPosition() {
 		return _yPosition;
 	}
@@ -27,9 +21,7 @@ public class GameField {
 	public String getValue() {
 		return _value;
 	}
-
 	
-	// Publics
 	/**
 	 * Public constructor for creating a game-field. 
 	 * @param xPosition the x-position on the grid
@@ -56,8 +48,7 @@ public class GameField {
 	public boolean equals(Object obj) {
 		if (obj.getClass().equals(GameField.class)) {
 			GameField comp = (GameField) obj;
-			return (comp.getXPosition() == getXPosition() 
-					&& comp.getYPosition() == getYPosition());
+			return (comp.getXPosition() == getXPosition() && comp.getYPosition() == getYPosition());
 		}
 		return false;
 	}

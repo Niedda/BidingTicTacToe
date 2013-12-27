@@ -4,6 +4,8 @@ import java.util.Random;
 
 public class PokerBettingStrategy implements IStrategy {
 
+	private IStrategy _backupStrategy = new ModerateBettingStrategy();
+	
 	@Override
 	public int getNextBet(int fieldsToWinPlayer, int fieldsToWinAi) {
 		if(fieldsToWinPlayer != 1) {
@@ -17,7 +19,5 @@ public class PokerBettingStrategy implements IStrategy {
 			}
 		}
 		return _backupStrategy.getNextBet(fieldsToWinPlayer, fieldsToWinAi);		
-	}
-	
-	private IStrategy _backupStrategy = new ModerateBettingStrategy();
+	}	
 }

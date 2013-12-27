@@ -20,10 +20,9 @@ public class MainEntryPoint extends Application {
 	}
 
 	/**
-	 * Main start method for the JavaFx-application.
+	 * Main start method for the JavaFx-Application.
 	 * 
-	 * @throws IOException
-	 *             *
+	 * @throws IOException             
 	 */
 	@Override
 	public void start(Stage mainStage) {
@@ -34,8 +33,8 @@ public class MainEntryPoint extends Application {
 			mainStage.setScene(new Scene(root));
 			mainStage.show();
 			FxmlHelper.getInstance().setMainStage(mainStage);
-		} catch (Exception ex) {
-			System.out.println(ex.toString());
+		} catch (IOException ex) {
+			Context.getContext().handleException(ex);
 		}
 	}
 }

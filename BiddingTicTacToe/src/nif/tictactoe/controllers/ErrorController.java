@@ -11,6 +11,10 @@ import nif.tictactoe.FxmlHelper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 
+/*
+ * Controller class for unexpected errors.
+ * Linked to the ErrorView.fxml
+ */
 public class ErrorController {
 
 	@FXML

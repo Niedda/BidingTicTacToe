@@ -16,6 +16,9 @@ import java.util.Properties;
 import nif.tictactoe.model.IStrategy;
 import nif.tictactoe.model.ImmitatorBidStrategy;
 
+/*
+ * Offers easy access to the game setting.
+ */
 public class SettingHelper implements Serializable {
 
 	// Private
@@ -26,21 +29,15 @@ public class SettingHelper implements Serializable {
 	}
 
 	private final String _propertyNamePlayer = "pname";
-
 	private final String _filename = "TicTacToe_Properties.config";
-
 	private final String _defaultName = "Player1";
-
 	private final String _hardWin = "hWin";
-
 	private final String _easyWin = "eWin";
-
 	private final String _hardLose = "hLose";
-
 	private final String _easyLose = "eLose";
-
 	private final String _strategy = "strat";
-
+	private static SettingHelper _instance;
+	
 	private int loadStatistic(String propName) {
 		try {
 			Properties props = new Properties();
@@ -86,7 +83,9 @@ public class SettingHelper implements Serializable {
 		return getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 	}
 	
-	// Public
+	/*
+	 * Save the new player name to the property file.
+	 */
 	public void savePlayerName(String name) {
 		try {
 			Properties props = new Properties();
@@ -100,6 +99,9 @@ public class SettingHelper implements Serializable {
 		}
 	}
 
+	/*
+	 * Load the player name from the property file.
+	 */
 	public String loadPlayerName() {
 		try {
 			Properties props = new Properties();
@@ -115,6 +117,9 @@ public class SettingHelper implements Serializable {
 		}
 	}
 
+	/*
+	 * Add a win vs a hard pc to the player statistic.
+	 */
 	public void addPlayerHardWin() {
 		String pName = loadPlayerName();
 		int counter = loadStatistic(pName.concat(_hardWin));
@@ -122,6 +127,9 @@ public class SettingHelper implements Serializable {
 		saveStatistic(pName.concat(_hardWin), counter);
 	}
 
+	/*
+	 * Add a win vs a easy pc to the player statistic.
+	 */
 	public void addPlayerEasyWin() {
 		String pName = loadPlayerName();
 		int counter = loadStatistic(pName.concat(_easyWin));
@@ -129,6 +137,9 @@ public class SettingHelper implements Serializable {
 		saveStatistic(pName.concat(_easyWin), counter);
 	}
 
+	/*
+	 * Add a lose vs a hard pc to the player statistic.
+	 */
 	public void addPlayerHardLose() {
 		String pName = loadPlayerName();
 		int counter = loadStatistic(pName.concat(_hardLose));
@@ -136,6 +147,9 @@ public class SettingHelper implements Serializable {
 		saveStatistic(pName.concat(_hardLose), counter);
 	}
 
+	/*
+	 * Add a lose vs a easy pc to the player statistic.
+	 */
 	public void addPlayerEasyLose() {
 		String pName = loadPlayerName();
 		int counter = loadStatistic(pName.concat(_easyLose));
@@ -159,6 +173,9 @@ public class SettingHelper implements Serializable {
 		return loadStatistic(loadPlayerName().concat(_easyLose));
 	}
 
+	/*
+	 * Save the {@link ImmitatorBidStrategy}.
+	 */
 	public void saveBidStrategy(ImmitatorBidStrategy strategy) {
 		FileOutputStream fileOutputStream;
 		
@@ -178,6 +195,9 @@ public class SettingHelper implements Serializable {
 		return f.exists();
 	}
 	
+	/*
+	 * Load the {@link ImmitatorBidStrategy}.
+	 */
 	public IStrategy loadBidStrategy(String saveNumber) {
 		try {
 			FileInputStream fileInputStream = new FileInputStream(getCurrentFilePath().concat(_strategy.concat(String.valueOf(saveNumber).concat(".strategy"))));
@@ -193,6 +213,9 @@ public class SettingHelper implements Serializable {
 		return null;
 	}
 
+	/*
+	 * Load all available {@link ImmitatorBidStrategy}.
+	 */
 	public ArrayList<ImmitatorBidStrategy> loadAvailableBidStrategies() {
 		File dir = new File(getCurrentFilePath());
 		ArrayList<ImmitatorBidStrategy> result = new ArrayList<ImmitatorBidStrategy>();
@@ -225,6 +248,9 @@ public class SettingHelper implements Serializable {
 		return result;
 	}
 
+	/*
+	 * Delete the {@link ImmitatorBidStrategy}.
+	 */
 	public void deleteBidStrategy(String saveNumber) {
 		try {
 			File f = new File(getCurrentFilePath().concat(_strategy.concat(String.valueOf(saveNumber).concat(".strategy"))));
@@ -237,14 +263,10 @@ public class SettingHelper implements Serializable {
 		}
 	}
 
-	// Singleton
-	private static SettingHelper _instance;
-
 	public static SettingHelper getInstance() {
 		if (_instance == null) {
 			_instance = new SettingHelper();
 		}
 		return _instance;
 	}
-
 }

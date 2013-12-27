@@ -16,19 +16,14 @@ public class Context {
 	}
 		
 	private BrainBase _brain;
-				
 	private GameField[][] _playground;
-	
 	private int _aiBid;
-	
 	private int _plBid;
-	
 	private int _aiCredits;
-	
 	private int _plCredits;
-
 	private Exception _lastError;
-		
+	private static Context _context;
+	
 	public int getAiCredits() {
 		return _aiCredits;
 	}
@@ -90,7 +85,10 @@ public class Context {
 	public void setPlayground(GameField[][] playground) {
 		_playground = playground;		
 	}
-			
+		
+	/* 
+	 * Handle an unexpected exception an invoke the exception dialog.
+	 */
 	public void handleException(Exception ex) {
 		_lastError = ex;
 		FxmlHelper.getInstance().showModalDialog("ErrorView.fxml", "Fehler");
@@ -154,10 +152,7 @@ public class Context {
 		_aiBid = 0;
 		_plBid = 0;
 	}
-		
-	//Statics
-	private static Context _context;
-	
+			
 	/**
 	 * The only existing instance of this class.
 	 * @return {@link Context}

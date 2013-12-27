@@ -13,12 +13,10 @@ import nif.tictactoe.model.*;
  */
 public abstract class BrainBase {
 
-	// Privates
 	private int _fieldsToWinAi;
 	private int _fieldsToWinPlayer;
 	protected IStrategy _strategy;
 
-	// Setters
 	private void setFieldsToWinAi(int fields) {
 		_fieldsToWinAi = fields;
 	}
@@ -27,7 +25,6 @@ public abstract class BrainBase {
 		_fieldsToWinPlayer = fields;
 	}
 
-	// Getters
 	protected final int getFieldsToWinAi() {
 		return _fieldsToWinAi;
 	}
@@ -84,7 +81,7 @@ public abstract class BrainBase {
 
 	/**
 	 * Get the moves to win for the computer and the player. The updated values
-	 * can get by the methods <b>getFieldsToWinAi</b></br>
+	 * are stored in the getters <b>getFieldsToWinAi</b></br>
 	 * <b>getFieldsToWinPlayer</b>
 	 */
 	protected final void getMovesToWin() {
@@ -126,9 +123,9 @@ public abstract class BrainBase {
 	}
 
 	/**
-	 * Calculate the next move from the computer.
+	 * Calculate the next move for the computer.
 	 * 
-	 * @throws InvalidActivityException
+	 * @throws InvalidActivityException if there is no field left
 	 */
 	public GameField getNextMove() throws InvalidActivityException {
 		ArrayList<GameField> aiFields = getAiFields();
@@ -220,7 +217,8 @@ public abstract class BrainBase {
 	}
 
 	/**
-	 * Save the strategy if needed.
+	 * Save the win to the strategy if needed.<br/>
+	 * Only used in {@link ImmitatorBidStrategy}
 	 */
 	public void saveAiWin() {
 		if (_strategy.getClass() == ImmitatorBidStrategy.class) {
@@ -231,7 +229,8 @@ public abstract class BrainBase {
 	}
 
 	/**
-	 * Save the strategy if needed.
+	 * Save the lose to the strategy if needed.<br/>
+	 * Only used in {@link ImmitatorBidStrategy}
 	 */
 	public void saveAiLose() {
 		if (_strategy.getClass() == ImmitatorBidStrategy.class) {

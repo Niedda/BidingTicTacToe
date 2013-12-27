@@ -9,8 +9,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
+/*
+ * Controller for StatisticView.fxml.
+ */
 public class StatisticController implements Initializable {
-	
 	@FXML
 	private Label _easyWin;
 	@FXML

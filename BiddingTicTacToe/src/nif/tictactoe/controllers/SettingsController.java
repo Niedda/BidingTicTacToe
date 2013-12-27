@@ -10,16 +10,19 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+/*
+ * Controller for SettingsView.fxml.
+ */
 public class SettingsController implements Initializable {
 	@FXML
-	private TextField PlayerName;
+	private TextField _playerName;
 	@FXML
-	private Label ErrorField;
+	private Label _errorField;
 
 	@FXML
 	private void onSaveClick() {
 		if (checkUsernameEmpty()) {
-			SettingHelper.getInstance().savePlayerName(PlayerName.getText());
+			SettingHelper.getInstance().savePlayerName(_playerName.getText());
 			FxmlHelper.getInstance().closeDialog();
 		}
 	}
@@ -27,16 +30,15 @@ public class SettingsController implements Initializable {
 	@FXML
 	private void onTextChanged() {
 		if (!checkUsernameEmpty()) {
-			ErrorField.setText("");
+			_errorField.setText("");
 		}
 	}
 
 	private boolean checkUsernameEmpty() {
-		if (PlayerName.getText().equals("")) {
-			ErrorField.setText("Bite einen gültigen Name eingeben.");
+		if (_playerName.getText().equals("")) {
+			_errorField.setText("Bite einen gültigen Name eingeben.");
 			return false;
 		}
-
 		return true;
 	}
 
@@ -44,6 +46,6 @@ public class SettingsController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		String playerName;
 		playerName = SettingHelper.getInstance().loadPlayerName();
-		PlayerName.setText(playerName);
+		_playerName.setText(playerName);
 	}
 }

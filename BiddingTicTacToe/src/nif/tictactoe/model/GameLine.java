@@ -13,7 +13,6 @@ import nif.tictactoe.Context;
  */
 public class GameLine {
 
-	// Privates
 	private GameLine(GameField field1, GameField field2, GameField field3) {
 		_field1 = field1;
 		_field2 = field2;
@@ -21,12 +20,9 @@ public class GameLine {
 	}
 
 	private GameField _field1;
-
 	private GameField _field2;
-
 	private GameField _field3;
 
-	// Getters
 	public GameField getField1() {
 		return _field1;
 	}
@@ -39,7 +35,6 @@ public class GameLine {
 		return _field3;
 	}
 
-	// Publics
 	/**
 	 * Get the {@link GameField} of the line.
 	 * 
@@ -74,7 +69,6 @@ public class GameLine {
 	 * 
 	 * @param fieldsOwned
 	 *            The fields owned.
-	 * @return int
 	 */
 	public int getMovesNeeded(ArrayList<GameField> fieldsOwned) {
 		int fieldCountNeeded = 3;
@@ -110,7 +104,6 @@ public class GameLine {
 		return false;
 	}
 
-	// Statics
 	/**
 	 * Get the available {@link GameLine} still available.
 	 * 
@@ -148,6 +141,7 @@ public class GameLine {
 	public static ArrayList<GameLine> getPossibleGameLines() {
 		GameField[][] playground = Context.getContext().getPlayground();
 		ArrayList<GameLine> lines = new ArrayList<>();
+		
 		//top left - bottom right
 		lines.add(new GameLine(
 				new GameField(0, 0, playground[0][0].getValue()),
