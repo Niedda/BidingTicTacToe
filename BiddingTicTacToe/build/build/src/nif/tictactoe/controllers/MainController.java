@@ -393,14 +393,12 @@ public class MainController implements Initializable {
 		Platform.exit();
 	}
 
+	/**
+	 * Event Handler if the Menu Button exit is clicked.
+	 */
 	@FXML
-	private void onExceptionClick() {
-		try {
-			String nan = "nan";
-			Integer.parseInt(nan);
-		} catch (NumberFormatException ex) {
-			Context.getContext().handleException(ex);
-		}
+	private void onRulesClick() {
+		FxmlHelper.getInstance().openFile("Spielregeln.pdf");
 	}
 
 	@Override

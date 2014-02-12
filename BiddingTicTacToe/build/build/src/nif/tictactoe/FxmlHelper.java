@@ -1,5 +1,10 @@
 package nif.tictactoe;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 
 import javafx.application.Platform;
@@ -27,7 +32,7 @@ public class FxmlHelper {
 	private Stage getDialogStage() {
 		return _dialogStage;
 	}
-	
+
 	private URL getFXMLUrl(String name) {
 		return getClass().getResource("views/".concat(name));
 	}
@@ -43,12 +48,12 @@ public class FxmlHelper {
 			Parent loader = FXMLLoader.load(fxmlUrl);
 			dialog.setScene(new Scene(loader));
 		} catch (Exception ex) {
-			if(!fxmlFile.equals("ErrorView.fxml")) {
-				Context.getContext().handleException(ex);	
+			if (!fxmlFile.equals("ErrorView.fxml")) {
+				Context.getContext().handleException(ex);
 			}
 		}
-	}	
-	
+	}
+
 	public static FxmlHelper getInstance() {
 		if (_instance == null) {
 			_instance = new FxmlHelper();
@@ -59,7 +64,7 @@ public class FxmlHelper {
 	public void setMainStage(Stage stage) {
 		_mainStage = stage;
 	}
-	
+
 	/**
 	 * Helper method for displaying a modal dialog.
 	 */
@@ -93,7 +98,28 @@ public class FxmlHelper {
 		}
 	}
 
-	/** 
+	/*
+	 * Open a file stored in the view folder.
+	 */
+	public void openFile(String name) {
+		try {
+			File f = new File("Spielregeln.pdf");
+			InputStream inputStream = MainEntryPoint.class.getResourceAsStream("views/" + name);
+			OutputStream out = new FileOutputStream(f);
+			byte buf[] = new byte[1024];
+			int len;
+			while ((len = inputStream.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			out.close();
+			inputStream.close();
+			Desktop.getDesktop().open(f);
+		} catch (Exception e) {
+			Context.getContext().handleException(e);
+		}
+	}
+
+	/**
 	 * Close the currently open dialog.
 	 */
 	public void closeDialog() {

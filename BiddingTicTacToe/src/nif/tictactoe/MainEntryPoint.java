@@ -28,8 +28,8 @@ public class MainEntryPoint extends Application {
 	public void start(Stage mainStage) {
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("views/MainView.fxml"));
-			mainStage.setTitle("Bidding Tic Tac Toe");
-			mainStage.getIcons().add(new Image("file:images/tictactoeIcon.png"));
+			mainStage.setTitle("Bidding TicTacToe");
+			mainStage.getIcons().add(new Image(this.getClass().getResourceAsStream("views/tictactoeIcon.png")));
 			mainStage.setScene(new Scene(root));
 			mainStage.show();
 			FxmlHelper.getInstance().setMainStage(mainStage);

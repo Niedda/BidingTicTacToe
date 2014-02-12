@@ -29,7 +29,7 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="Hilfe zum Spiel" />
+            <MenuItem mnemonicParsing="false" onAction="#onRulesClick" text="Hilfe zum Spiel" />
             <MenuItem mnemonicParsing="false" onAction="#onAboutClick" text="Über Bidning TicTacToe" />
           </items>
         </Menu>

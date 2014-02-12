@@ -15,8 +15,6 @@ public class AggressiveBettingStrategy implements IStrategy {
 
 		if (_move % 2 == 1) {
 			return 1;
-		} else if (fieldsToWinAi == 1) {
-			return aiCredits;
 		}
 
 		if (4 > aiCredits) {
@@ -26,7 +24,6 @@ public class AggressiveBettingStrategy implements IStrategy {
 		if (4 > playerCredits) {
 			return playerCredits + 1;
 		}
-
-		return 4;
+		return 3;
 	}
 }
